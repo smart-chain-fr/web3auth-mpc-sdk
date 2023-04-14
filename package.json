@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "http-server ./ -p 3000 -o ./public/ & tsc --watch",
+    "start": "live-server --port=3000 --open=./public/ --wait=200 & tsc --watch",
     "test": "tsc && mocha --timeout 999999 --colors dist/**/*.spec.js"
   },
   "author": "Smartchain",
@@ -18,7 +18,9 @@
     "@types/mocha": "^10.0.0",
     "@types/node": "^18.11.9",
     "http-server": "^14.1.1",
+    "live-server": "^1.2.2",
     "mocha": "^10.2.0",
+    "tslib": "^2.5.0",
     "typescript": "^5.0.4"
   }
 }

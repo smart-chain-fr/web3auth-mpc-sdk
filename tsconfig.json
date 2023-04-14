@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "incremental": false, 
-    "target": "es5",
+    "target": "es6",
     "module": "CommonJS",
     "lib": [
       "dom",
@@ -37,6 +37,7 @@
     /* Module Resolution Options */
     "moduleResolution": "node",
     "baseUrl": ".",
+    "declaration": true,
     "paths": {},
     // "rootDirs": [],                       
     // "typeRoots": [],                      
