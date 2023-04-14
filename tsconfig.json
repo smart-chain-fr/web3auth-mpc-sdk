@@ -1,0 +1,67 @@
+{
+  "compilerOptions": {
+    "incremental": false, 
+    "target": "es5",
+    "module": "CommonJS",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "jsx": "preserve",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "noEmit": false,
+    "importHelpers": true,
+    "resolveJsonModule": true,
+    /* Strict Type-Checking Options */
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": false,
+    "noImplicitOverride": true,
+    "strict": true, 
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noPropertyAccessFromIndexSignature": true,
+    /* Additional Checks */
+    "noUnusedLocals": true, 
+    "noImplicitReturns": true, 
+    "noUncheckedIndexedAccess": true,
+    "useUnknownInCatchVariables": true,
+    /* Module Resolution Options */
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {},
+    // "rootDirs": [],                       
+    // "typeRoots": [],                      
+    // "types": [],                           
+    // "allowSyntheticDefaultImports": true, 
+    "esModuleInterop": true,
+    // "allowUmdGlobalAccess": true,          
+    /* Source Map Options */
+    //"sourceRoot": "./src",                     
+    //"mapRoot": "./dist",                      
+    //"inlineSourceMap": false,              
+    //"inlineSources": false,                
+    /* Experimental Options */
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true, 
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true, 
+    "allowJs": true,
+    "isolatedModules": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.json"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

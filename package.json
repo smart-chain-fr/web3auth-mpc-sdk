@@ -1,0 +1,24 @@
+{
+  "name": "web3auth-mpc-sdk",
+  "version": "1.0.0",
+  "description": "Web3Auth Iframe Sdk",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "http-server ./ -p 3000 -o ./public/ & tsc --watch",
+    "test": "tsc && mocha --timeout 999999 --colors dist/**/*.spec.js"
+  },
+  "author": "Smartchain",
+  "license": "ISC",
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "^18.11.9",
+    "http-server": "^14.1.1",
+    "mocha": "^10.2.0",
+    "typescript": "^5.0.4"
+  }
+}
