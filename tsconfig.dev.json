@@ -2,7 +2,7 @@
   "compilerOptions": {
     "incremental": false, 
     "target": "es6",
-    "module": "CommonJS",
+    "module": "AMD",
     "lib": [
       "dom",
       "dom.iterable",
@@ -10,11 +10,11 @@
     ],
     "jsx": "preserve",
     "sourceMap": true,
-    "outDir": "./dist",
+    "outDir": "./dev",
     "rootDir": "./src",
     "noEmit": false,
     "importHelpers": true,
-    "resolveJsonModule": true,
+    "resolveJsonModule": false,
     /* Strict Type-Checking Options */
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
@@ -39,6 +39,7 @@
     "baseUrl": ".",
     "declaration": true,
     "paths": {},
+    "outFile": "./dev/index.js",
     // "rootDirs": [],                       
     // "typeRoots": [],                      
     // "types": [],                           
@@ -47,7 +48,7 @@
     // "allowUmdGlobalAccess": true,          
     /* Source Map Options */
     //"sourceRoot": "./src",                     
-    //"mapRoot": "./dist",                      
+    //"mapRoot": "./dev",                      
     //"inlineSourceMap": false,              
     //"inlineSources": false,                
     /* Experimental Options */

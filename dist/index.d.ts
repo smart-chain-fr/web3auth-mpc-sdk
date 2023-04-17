@@ -1,3 +1,1 @@
-declare class Login extends HTMLElement {
-    connectedCallback(): void;
-}
+import "./LoginCpm";

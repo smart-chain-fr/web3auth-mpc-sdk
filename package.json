@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "live-server --port=3000 --open=./public/ --wait=200 & tsc --watch",
+    "start": "live-server --port=3000 --open=./public-dev/ --wait=200 & tsc --watch --p ./tsconfig.dev.json",
     "test": "tsc && mocha --timeout 999999 --colors dist/**/*.spec.js"
   },
   "author": "Smartchain",

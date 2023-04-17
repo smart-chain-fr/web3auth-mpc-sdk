@@ -1,10 +1,5 @@
 "use strict";
-class Login extends HTMLElement {
-    // connect component
-    connectedCallback() {
-        this.textContent = "Hello World 2!";
-    }
-}
-customElements.define('w3c-login-view', Login);
-console.log("Hello 200");
+Object.defineProperty(exports, "__esModule", { value: true });
+require("./LoginCpm");
+console.log(LoginCpm);
 //# sourceMappingURL=index.js.map
