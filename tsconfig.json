@@ -1,68 +1,38 @@
 {
   "compilerOptions": {
-    "incremental": false, 
-    "target": "es6",
-    "module": "CommonJS",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "jsx": "preserve",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "noEmit": false,
-    "importHelpers": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": ["es2017", "es2019", "dom"],
+    "types": ["node"],
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "strictNullChecks": true,
+    "strict": true,
+    "preserveConstEnums": true,
     "resolveJsonModule": true,
-    /* Strict Type-Checking Options */
+    "declaration": true,
+    "outDir": "./dist",
+    "target": "es2019",
+    "sourceMap": false,
+    "esModuleInterop": true,
+    "useUnknownInCatchVariables": false,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "exactOptionalPropertyTypes": false,
+    "exactOptionalPropertyTypes": true,
     "noImplicitOverride": true,
-    "strict": true, 
-    "noImplicitAny": true,
-    "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictBindCallApply": true,
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
     "noPropertyAccessFromIndexSignature": true,
-    /* Additional Checks */
-    "noUnusedLocals": true, 
-    "noImplicitReturns": true, 
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
-    "useUnknownInCatchVariables": true,
-    /* Module Resolution Options */
-    "moduleResolution": "node",
-    "baseUrl": ".",
-    "declaration": true,
-    "paths": {},
-    // "rootDirs": [],                       
-    // "typeRoots": [],                      
-    // "types": [],                           
-    // "allowSyntheticDefaultImports": true, 
-    "esModuleInterop": true,
-    // "allowUmdGlobalAccess": true,          
-    /* Source Map Options */
-    //"sourceRoot": "./src",                     
-    //"mapRoot": "./dist",                      
-    //"inlineSourceMap": false,              
-    //"inlineSources": false,                
-    /* Experimental Options */
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true, 
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true, 
-    "allowJs": true,
-    "isolatedModules": false
+    "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.json"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**/*", "src/**/*.json"],
+  "exclude": ["node_modules"]
 }
