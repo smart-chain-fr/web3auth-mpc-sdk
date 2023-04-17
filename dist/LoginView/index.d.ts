@@ -7,4 +7,6 @@ export default class LoginView extends HTMLElement {
     connectedCallback(): void;
     disconnectedCallback(): void;
     private render;
+    private setStyle;
+    private onClick;
 }
