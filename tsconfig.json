@@ -2,7 +2,7 @@
   "compilerOptions": {
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": ["es2017", "es2019", "dom"],
+    "lib": ["es6", "dom"],
     "types": ["node"],
     "module": "commonjs",
     "noImplicitAny": true,
@@ -13,7 +13,7 @@
     "resolveJsonModule": true,
     "declaration": true,
     "outDir": "./dist",
-    "target": "es2019",
+    "target": "es6",
     "sourceMap": false,
     "esModuleInterop": true,
     "useUnknownInCatchVariables": false,
