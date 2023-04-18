@@ -6,6 +6,7 @@ class LoginView extends HTMLElement {
         super();
         this._style = document.createElement("style");
         this.store = new store_1.LoginViewStore();
+        this._onClose = null;
         this.removeStore = () => { };
         this.rootElement = this.attachShadow({ mode: "closed" });
         this.setStyle();
@@ -14,17 +15,36 @@ class LoginView extends HTMLElement {
         this.removeStore = this.store.onChange(() => this.render());
         this.render();
     }
+    static get observedAttributes() {
+        return [];
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+        console.log("attributeChangedCallback", name, oldValue, newValue);
+    }
     disconnectedCallback() {
         this.removeStore();
+    }
+    get onClose() {
+        return this._onClose;
+    }
+    set onClose(onClose) {
+        this._onClose = onClose;
+        const closeButton = this.rootElement.getElementById("close-button");
+        if (closeButton && onClose)
+            closeButton.onclick = onClose;
     }
     render() {
         const popup = document.createElement("div");
         popup.classList.add("popup");
-        popup.onclick = () => this.onClick();
         const popupContent = document.createElement("div");
         popupContent.classList.add("popup-content");
         popupContent.innerText = this.store.state.message;
+        popupContent.onclick = () => this.onClick();
+        const closeButton = document.createElement("button");
+        closeButton.id = "close-button";
+        closeButton.innerText = "Close";
         popup.appendChild(popupContent);
+        popup.appendChild(closeButton);
         this.rootElement.appendChild(this._style);
         this.rootElement.appendChild(popup);
     }
@@ -41,6 +61,7 @@ class LoginView extends HTMLElement {
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
     }
@@ -49,11 +70,22 @@ class LoginView extends HTMLElement {
         font-size: 20px;
         font-weight: bold;
         color: #333;
+    }
+    
+    button {
+        width: 100px;
+        height: 30px;
+        background: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
     }`;
     }
     onClick() {
-        console.log("click");
         this.store.state = {
+            ...this.store.state,
             message: "Hello World 2",
         };
     }

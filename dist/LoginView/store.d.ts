@@ -1,5 +1,6 @@
 interface ILoginViewState {
     message: string;
+    onClose?: () => void;
 }
 export declare class LoginViewStore {
     private readonly event;

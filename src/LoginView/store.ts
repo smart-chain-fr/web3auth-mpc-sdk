@@ -2,6 +2,7 @@ import EventService from "../Services/EventEmitter";
 
 interface ILoginViewState {
   message: string;
+  onClose?: () => void;
 }
 
 export class LoginViewStore {
@@ -13,7 +14,6 @@ export class LoginViewStore {
 
   public set state(newState: ILoginViewState) {
     this._state = newState;
-    console.log("state changed");
     this.event.emit("change");
   }
 

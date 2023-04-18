@@ -14,7 +14,6 @@ class LoginViewStore {
     }
     set state(newState) {
         this._state = newState;
-        console.log("state changed");
         this.event.emit("change");
     }
     get state() {
