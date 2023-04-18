@@ -1,4 +1,4 @@
 import "./jsx";
-import LoginView from "./LoginView";
+import Modal from "./Modal";
 
-customElements.define("w3ac-login-view", LoginView);
+customElements.define("w3ac-modal", Modal);
