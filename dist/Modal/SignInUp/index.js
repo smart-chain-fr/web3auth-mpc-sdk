@@ -44,7 +44,6 @@ class SignInUp {
             };
         };
         this._content.appendChild(button);
-        this._content.appendChild(this._style);
     }
 }
 exports.default = SignInUp;

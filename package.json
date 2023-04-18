@@ -4,7 +4,8 @@
   "description": "Web3Auth Iframe Sdk",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "watch": "tsc --watch"
   },
   "author": "Smartchain",
   "license": "ISC",
