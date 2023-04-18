@@ -37,6 +37,7 @@
     "@tkey/chrome-storage": "8.0.0-alpha.0",
     "@tkey/common-types": "8.0.0-alpha.0",
     "@tkey/core": "8.0.0-alpha.0",
+    "@tkey/default": "^8.0.7-alpha.0",
     "@tkey/service-provider-torus": "8.0.0-alpha.0",
     "@tkey/share-serialization": "8.0.0-alpha.0",
     "@tkey/storage-layer-torus": "8.0.0-alpha.0",
