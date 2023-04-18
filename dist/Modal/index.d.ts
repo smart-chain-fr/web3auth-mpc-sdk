@@ -1,23 +1,21 @@
+import ModalStore from "./store";
 export interface IModalProps {
-    title: string;
     onCloseButtonClick?: (() => void) | null;
 }
 export default class Modal extends HTMLElement {
-    protected rootElement: ShadowRoot;
-    private _style;
-    private _children;
     private _onCloseButtonClick;
-    private _popupTitle;
+    private _style;
+    private _removeOnStateChange;
+    protected _rootElement: ShadowRoot;
+    protected _children: HTMLDivElement;
+    protected _store: ModalStore;
     constructor();
-    static get observedAttributes(): string[];
     connectedCallback(): void;
-    attributeChangedCallback(name: string, oldValue: string, newValue: string): void;
+    disconnectedCallback(): void;
     private render;
+    private setChildren;
     get onCloseButtonClick(): IModalProps["onCloseButtonClick"];
     set onCloseButtonClick(onCloseButtonClick: IModalProps["onCloseButtonClick"]);
-    get popupTitle(): string;
-    private updateProperty;
-    private initChildrenDiv;
     private setFontFamily;
     private setStyle;
 }

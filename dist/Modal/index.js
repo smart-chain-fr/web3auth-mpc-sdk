@@ -1,68 +1,66 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const Modal_1 = require("../enums/Modal");
+const SignInUp_1 = __importDefault(require("./SignInUp"));
+const store_1 = __importDefault(require("./store"));
 class Modal extends HTMLElement {
     constructor() {
         super();
-        this._style = document.createElement("style");
-        this._children = document.createElement("div");
         this._onCloseButtonClick = null;
-        this._popupTitle = "";
-        this.rootElement = this.attachShadow({ mode: "closed" });
+        this._style = document.createElement("style");
+        this._removeOnStateChange = () => { };
+        this._children = document.createElement("div");
+        this._store = store_1.default.getInstance();
+        this._rootElement = this.attachShadow({ mode: "closed" });
         this.setFontFamily();
         this.setStyle();
     }
-    static get observedAttributes() {
-        return ["title"];
-    }
     connectedCallback() {
-        this.initChildrenDiv();
+        this._removeOnStateChange = this._store.onChange(() => this.render());
+        this.setChildren();
         this.render();
     }
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (oldValue === newValue)
-            return;
-        this.updateProperty(name, newValue);
-        this.render();
+    disconnectedCallback() {
+        this._removeOnStateChange();
     }
     render() {
-        this.rootElement.innerHTML = `
-        <div class="popup">
+        this._rootElement.innerHTML = `
+        <div class="popup" id="w3ac-popup">
             <div class="header">
-                <p class="title" id="w3ac-popup-title">${this._popupTitle}</p>
+                <p class="title" id="w3ac-popup-title">${this._store.state.currentStep}</p>
                 <div id="w3ac-close-button" class="close-button">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
                         <path d="M6 18L18 6M6 6L18 18" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
             </div>
-            ${this._children.outerHTML}
         </div>`;
-        this.rootElement.appendChild(this._style);
+        const popup = this._rootElement.getElementById("w3ac-popup");
+        popup === null || popup === void 0 ? void 0 : popup.appendChild(this._children);
+        this._rootElement.appendChild(this._style);
+    }
+    setChildren() {
+        switch (this._store.state.currentStep) {
+            case Modal_1.ModalStep.SignIn:
+            case Modal_1.ModalStep.SignUp:
+                this._children.appendChild(SignInUp_1.default.getInstance()._content);
+                break;
+            default:
+                break;
+        }
     }
     get onCloseButtonClick() {
         return this._onCloseButtonClick;
     }
     set onCloseButtonClick(onCloseButtonClick) {
         this._onCloseButtonClick = onCloseButtonClick;
-        const closeButton = this.rootElement.getElementById("w3ac-close-button");
+        const closeButton = this._rootElement.getElementById("w3ac-close-button");
         if (closeButton && this._onCloseButtonClick) {
             closeButton.onclick = this._onCloseButtonClick;
         }
-    }
-    get popupTitle() {
-        return this._popupTitle;
-    }
-    updateProperty(name, newValue) {
-        switch (name) {
-            case "title":
-                this._popupTitle = newValue;
-                break;
-            default:
-                break;
-        }
-    }
-    initChildrenDiv() {
-        this._children.classList.add("children");
     }
     setFontFamily() {
         const font = document.createElement("link");

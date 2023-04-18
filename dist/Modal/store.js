@@ -3,14 +3,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoginViewStore = void 0;
 const EventEmitter_1 = __importDefault(require("../Services/EventEmitter"));
-class LoginViewStore {
+const Modal_1 = require("../enums/Modal");
+class ModalStore {
     constructor() {
         this.event = new EventEmitter_1.default();
         this._state = {
-            message: "Hello World",
+            currentStep: Modal_1.ModalStep.SignIn,
         };
+    }
+    static getInstance() {
+        var _a;
+        return (this.instance = (_a = this.instance) !== null && _a !== void 0 ? _a : new ModalStore());
     }
     set state(newState) {
         this._state = newState;
@@ -26,4 +30,4 @@ class LoginViewStore {
         };
     }
 }
-exports.LoginViewStore = LoginViewStore;
+exports.default = ModalStore;

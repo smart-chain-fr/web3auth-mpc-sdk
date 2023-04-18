@@ -1,52 +1,64 @@
+import { ModalStep } from "../enums/Modal";
+import SignInUp from "./SignInUp";
+import ModalStore from "./store";
+
 export interface IModalProps {
-  title: string;
   onCloseButtonClick?: (() => void) | null;
 }
 
 export default class Modal extends HTMLElement {
-  protected rootElement: ShadowRoot;
-  protected _children = document.createElement("div");
-  private _style = document.createElement("style");
-
   private _onCloseButtonClick: IModalProps["onCloseButtonClick"] = null;
-  private _popupTitle: IModalProps["title"] = "";
+  private _style = document.createElement("style");
+  private _removeOnStateChange = () => {};
+  protected _rootElement: ShadowRoot;
+  protected _children = document.createElement("div");
+  protected _store = ModalStore.getInstance();
 
   constructor() {
     super();
-    this.rootElement = this.attachShadow({ mode: "closed" });
+    this._rootElement = this.attachShadow({ mode: "closed" });
     this.setFontFamily();
     this.setStyle();
   }
 
-  static get observedAttributes() {
-    return ["title"];
-  }
-
   public connectedCallback(): void {
-    this.initChildrenDiv();
+    this._removeOnStateChange = this._store.onChange(() => this.render());
+    this.setChildren();
     this.render();
   }
 
-  public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
-    if (oldValue === newValue) return;
-    this.updateProperty(name, newValue);
-    this.render();
+  public disconnectedCallback(): void {
+    this._removeOnStateChange();
   }
 
   private render() {
-    this.rootElement.innerHTML = `
-        <div class="popup">
+    this._rootElement.innerHTML = `
+        <div class="popup" id="w3ac-popup">
             <div class="header">
-                <p class="title" id="w3ac-popup-title">${this._popupTitle}</p>
+                <p class="title" id="w3ac-popup-title">${this._store.state.currentStep}</p>
                 <div id="w3ac-close-button" class="close-button">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
                         <path d="M6 18L18 6M6 6L18 18" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
             </div>
-            ${this._children.outerHTML}
         </div>`;
-    this.rootElement.appendChild(this._style);
+
+    const popup = this._rootElement.getElementById("w3ac-popup");
+    popup?.appendChild(this._children);
+    this._rootElement.appendChild(this._style);
+  }
+
+  private setChildren() {
+    switch (this._store.state.currentStep) {
+      case ModalStep.SignIn:
+      case ModalStep.SignUp:
+        this._children.appendChild(SignInUp.getInstance()._content);
+        break;
+
+      default:
+        break;
+    }
   }
 
   public get onCloseButtonClick() {
@@ -55,29 +67,10 @@ export default class Modal extends HTMLElement {
 
   public set onCloseButtonClick(onCloseButtonClick: IModalProps["onCloseButtonClick"]) {
     this._onCloseButtonClick = onCloseButtonClick;
-    const closeButton = this.rootElement.getElementById("w3ac-close-button");
+    const closeButton = this._rootElement.getElementById("w3ac-close-button");
     if (closeButton && this._onCloseButtonClick) {
       closeButton.onclick = this._onCloseButtonClick;
     }
-  }
-
-  public get popupTitle() {
-    return this._popupTitle;
-  }
-
-  private updateProperty(name: string, newValue: string) {
-    switch (name) {
-      case "title":
-        this._popupTitle = newValue;
-        break;
-
-      default:
-        break;
-    }
-  }
-
-  private initChildrenDiv() {
-    this._children.classList.add("children");
   }
 
   private setFontFamily() {
