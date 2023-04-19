@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getDenormaliseCoeff = exports.getAdditiveCoeff = void 0;
 const common_types_1 = require("@tkey/common-types");
 const bn_js_1 = __importDefault(require("bn.js"));
 const elliptic_1 = __importDefault(require("elliptic"));
@@ -49,5 +50,53 @@ function getLagrangeCoeffs(_allIndexes, _myIndex, _target = 0) {
     }
     return upper.mul(lower.invm(ec.curve.n)).umod(ec.curve.n);
 }
-const CalcultationHelper = { getTSSPubKey, getLagrangeCoeffs };
+const getAdditiveCoeff = (isUser, participatingServerIndexes, userTSSIndex, serverIndex) => {
+    const ec = getEcCrypto();
+    if (isUser) {
+        return getLagrangeCoeffs([1, userTSSIndex], userTSSIndex);
+    }
+    const serverLagrangeCoeff = getLagrangeCoeffs(participatingServerIndexes, serverIndex);
+    const masterLagrangeCoeff = getLagrangeCoeffs([1, userTSSIndex], 1);
+    const additiveLagrangeCoeff = serverLagrangeCoeff.mul(masterLagrangeCoeff).umod(ec.curve.n);
+    return additiveLagrangeCoeff;
+};
+exports.getAdditiveCoeff = getAdditiveCoeff;
+const getDenormaliseCoeff = (party, parties) => {
+    if (parties.indexOf(party) === -1)
+        throw new Error(`party ${party} not found in parties ${parties}`);
+    const ec = getEcCrypto();
+    const denormaliseLagrangeCoeff = getLagrangeCoeffs(parties, party).invm(ec.curve.n).umod(ec.curve.n);
+    return denormaliseLagrangeCoeff;
+};
+exports.getDenormaliseCoeff = getDenormaliseCoeff;
+function getDKLSCoeff(isUser, participatingServerIndexes, userTSSIndex, serverIndex) {
+    const sortedServerIndexes = participatingServerIndexes.sort((a, b) => a - b);
+    for (let i = 0; i < sortedServerIndexes.length; i++) {
+        if (sortedServerIndexes[i] !== participatingServerIndexes[i])
+            throw new Error("server indexes must be sorted");
+    }
+    const parties = [];
+    let serverPartyIndex = 0;
+    for (let i = 0; i < participatingServerIndexes.length; i++) {
+        const currentPartyIndex = i + 1;
+        parties.push(currentPartyIndex);
+        if (participatingServerIndexes[i] === serverIndex)
+            serverPartyIndex = currentPartyIndex;
+    }
+    const userPartyIndex = parties.length + 1;
+    parties.push(userPartyIndex);
+    if (isUser) {
+        const additiveCoeff = (0, exports.getAdditiveCoeff)(isUser, participatingServerIndexes, userTSSIndex, serverIndex);
+        const denormaliseCoeff = (0, exports.getDenormaliseCoeff)(userPartyIndex, parties);
+        const ec = getEcCrypto();
+        return denormaliseCoeff.mul(additiveCoeff).umod(ec.curve.n);
+    }
+    const additiveCoeff = (0, exports.getAdditiveCoeff)(isUser, participatingServerIndexes, userTSSIndex, serverIndex);
+    const denormaliseCoeff = (0, exports.getDenormaliseCoeff)(serverPartyIndex, parties);
+    const ec = getEcCrypto();
+    const coeff = denormaliseCoeff.mul(additiveCoeff).umod(ec.curve.n);
+    return coeff;
+}
+;
+const CalcultationHelper = { getTSSPubKey, getLagrangeCoeffs, getDKLSCoeff };
 exports.default = CalcultationHelper;

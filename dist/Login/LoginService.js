@@ -19,6 +19,10 @@ const common_types_1 = require("@tkey/common-types");
 const tKey_1 = require("./tKey");
 const calculationHelper_1 = __importDefault(require("./calculationHelper"));
 class LoginService {
+    constructor() {
+        this.tssShare2 = new bn_js_1.default(0);
+        this.tssShare2Index = 0;
+    }
     static getInstance() {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.instance)
@@ -223,6 +227,8 @@ class LoginService {
             }
             const tssShare1PubKey = yield this.getTSShare1();
             const { tssShare: tssShare2, tssIndex: tssShare2Index } = yield tKey_1.tKey.getTSSShare(factorKey);
+            this.tssShare2 = tssShare2;
+            this.tssShare2Index = tssShare2Index;
             const compressedTSSPubKey = this.calcultateCompressedPubKeyFromTSS(tssShare1PubKey, tssShare2, tssShare2Index);
             if (!this.isLocalSharePresent()) {
                 yield this.addFactorKeyMetadata(factorKey, tssShare2, tssShare2Index, "local storage share");
@@ -231,6 +237,19 @@ class LoginService {
             this.setFactorKeyInLocalStore(factorKey);
             return compressedTSSPubKey;
         });
+    }
+    getSigningParams() {
+        var _a;
+        const to_ret = {
+            tssNonce: (_a = tKey_1.tKey.metadata.tssNonces[tKey_1.tKey.tssTag]) !== null && _a !== void 0 ? _a : 0,
+            tssShare2: this.tssShare2,
+            tssShare2Index: this.tssShare2Index,
+            signatures: this.loginResponse.signatures.filter((sign) => sign !== null),
+        };
+        return to_ret;
+    }
+    getUser() {
+        return this.loginResponse.userInfo;
     }
 }
 exports.LoginService = LoginService;

@@ -1,0 +1,206 @@
+{
+    "app": "versity",
+    "domain": "smart-chain.fr",
+    "roundedDecimals": "4",
+    "blockchain": {
+        "type": "ethereum",
+        "ethereum": {
+            "infuraId": "1e53a3471c1d44db95ffa97cb16b3d85",
+            "rpc": "https://hidden-hidden-wind.matic-testnet.quiknode.pro/0519c248a733a433c1c85c4ddbfa6c37228dbcd0/",
+            "network": "matic",
+            "name": "Polygon Testnet",
+            "blockExplorer": "https://mumbai.polygonscan.com/",
+            "chainId": 80001,
+            "chainIdHexa": "0x13881",
+            "ticker": "MATIC",
+            "tickerName": "Matic",
+            "contracts": {
+                "nftCollection": "KT1LAuaHFVBD9J86Jd2H3QxrdD6rZmCGGiH7"
+            }
+        },
+        "tezos": {
+            "name": "Minteed",
+            "network": "kathmandunet",
+            "rpc": "https://rpc.kathmandunet.teztnets.xyz/",
+            "tzktApi": "https://api.kathmandunet.tzkt.io/",
+            "contracts": {
+                "factory": "KT1PXNcaEk4PMT5ppRBrjCrUrBRXEzEqBhRs",
+                "proxy": "KT1WromapUHjm4z9GjkhqGVpJ7uJeQHSXkkV",
+                "domainName": "KT1EAhRiHGUreBfbz7AC3881h5Fr9wrBoPzY"
+            }
+        }
+    },
+    "wallet": {
+        "type": "web3auth",
+        "ethereum": {
+            "web3modal": {
+                "providers": {
+                    "walletConnect": {
+                        "enabled": true
+                    },
+                    "torus": {
+                        "enabled": false
+                    },
+                    "binanceChainWallet": {
+                        "enabled": false
+                    }
+                },
+                "openlogin": {
+                    "label": "openlogin",
+                    "enabled": true,
+                    "loginMethods": {
+                        "enabled": true,
+                        "google": {
+                            "name": "google login",
+                            "enabled": false
+                        },
+                        "facebook": {
+                            "name": "facebook login",
+                            "enabled": false
+                        },
+                        "discord": {
+                            "name": "discord login",
+                            "enabled": false
+                        },
+                        "apple": {
+                            "name": "apple login",
+                            "enabled": false
+                        },
+                        "twitch": {
+                            "name": "twitch login",
+                            "enabled": false
+                        },
+                        "reddit": {
+                            "name": "reddit login",
+                            "enabled": false
+                        },
+                        "line": {
+                            "name": "line login",
+                            "enabled": false
+                        },
+                        "github": {
+                            "name": "github login",
+                            "enabled": false
+                        },
+                        "kakao": {
+                            "name": "kakao login",
+                            "enabled": false
+                        },
+                        "linkedin": {
+                            "name": "linkedin login",
+                            "enabled": false
+                        },
+                        "weibo": {
+                            "name": "weibo login",
+                            "enabled": false
+                        },
+                        "wechat": {
+                            "name": "wechat login",
+                            "enabled": false
+                        },
+                        "twitter": {
+                            "name": "twitter login",
+                            "enabled": false
+                        },
+                        "passwordless": {
+                            "name": "passwordless login",
+                            "enabled": true
+                        }
+                    }
+                },
+                "torus": {
+                    "label": "torus-evm",
+                    "enabled": false,
+                    "loginMethods": {
+                        "name": "torus login",
+                        "enabled": false
+                    }
+                }
+            },
+            "web3Auth": {
+                "network": "testnet",
+                "clientId": "BG32-nRu1lwgARBRW_bUhYLJrlIpJYXIdn1Ukwm27xYsJ89AdDGcq0raiLDcpjpH5cptiLcuKlYclkSd5ZpY0K4"
+            }
+        },
+        "tezos": {
+            "beacon": {},
+            "web3Auth": {
+                "network": "testnet",
+                "clientId": "BEZA6C9WdJZZ5go0uGLQkQGJiyCokKuS0N-FzI3gF3cyTxjO_uQzqSZ6DekeR5OoJGSsl6ntRKy8Je8GpNz788k"
+            }
+        }
+    },
+    "versions": [
+        {
+            "version": "v0",
+            "date": "2022/05/02 00:00:00",
+            "pagesComingSoon": {
+                "/page1": {
+                    "enabled": true,
+                    "title": "pages.coming_soon_pages.v0.page_1.title",
+                    "text": "pages.coming_soon_pages.v0.page_1.text"
+                },
+                "/page2": {
+                    "enabled": true,
+                    "title": "pages.coming_soon_pages.v0.page_2.title",
+                    "text": "pages.coming_soon_pages.v0.page_1.text"
+                }
+            }
+        },
+        {
+            "version": "v1",
+            "date": "2022/06/10 18:02:00",
+            "pagesComingSoon": {
+                "/page2": {
+                    "enabled": true,
+                    "title": "pages.coming_soon_pages.v0.page_2.title",
+                    "text": "pages.coming_soon_pages.v1.page_2.title"
+                }
+            }
+        },
+        { "version": "v2", "date": "2022/06/10 18:02:00", "pagesComingSoon": {} }
+    ],
+    "defaultPhase": 1,
+    "phases": [
+        {
+            "name": "Phase 1",
+            "label": "Flash Sale",
+            "index": 1,
+            "attrs": {
+                "vesting": "",
+                "typeOfFundraising": "",
+                "hardCap": ""
+            }
+        },
+        {
+            "name": "Phase 2",
+            "label": "Private Sale",
+            "index": 2,
+            "attrs": {
+                "vesting": "",
+                "typeOfFundraising": "",
+                "hardCap": ""
+            }
+        },
+        {
+            "name": "Phase 3",
+            "label": "Public Sale",
+            "index": 3,
+            "attrs": {
+                "vesting": "",
+                "typeOfFundraising": "",
+                "hardCap": ""
+            }
+        }
+    ],
+    "api": {
+        "rootUrl": "{{origin}}/api",
+        "back": "https://api.stg.versity.smart-chain.fr/api",
+        "coingecko": "https://api.coingecko.com/api/v3",
+        "binance": "https://api.binance.com/api/v3"
+    },
+    "sentry": {
+        "enabled": false,
+        "dsn": ""
+    }
+}

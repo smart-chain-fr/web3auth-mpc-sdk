@@ -6,9 +6,19 @@ export type FactorKeyCloudMetadata = {
     tssShare: BN;
     tssIndex: number;
 };
+export type ISigningParams = {
+    tssNonce: number;
+    tssShare2: BN;
+    tssShare2Index: number;
+    compressedTSSPubKey?: Buffer;
+    signatures: any;
+};
 export declare class LoginService {
     private static instance;
+    tssShare2: BN;
+    tssShare2Index: number;
     loginResponse: any;
+    constructor();
     static getInstance(): Promise<LoginService>;
     init(): Promise<void>;
     triggerLogin(): Promise<any>;
@@ -26,4 +36,6 @@ export declare class LoginService {
     getDeviceShareFromTkey(): Promise<ShareStore | undefined>;
     addFactorKeyMetadata(factorKey: BN, tssShare: BN, tssIndex: number, factorKeyDescription: string): Promise<void>;
     initTSSfromFactorKey(factorKey: BN): Promise<Buffer>;
+    getSigningParams(): ISigningParams;
+    getUser(): any;
 }

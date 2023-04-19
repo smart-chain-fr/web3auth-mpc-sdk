@@ -15,9 +15,24 @@ export type FactorKeyCloudMetadata = {
   tssIndex: number;
 };
 
+export type ISigningParams = {
+  tssNonce: number,
+  tssShare2:  BN,
+  tssShare2Index: number,
+  compressedTSSPubKey?: Buffer,
+  signatures: any // TO DO TYPE THIS
+}
+
 export class LoginService {
   private static instance: LoginService;
+  tssShare2: BN;
+  tssShare2Index: number;
   loginResponse: any;
+
+  constructor() {
+    this.tssShare2 = new BN(0);
+    this.tssShare2Index = 0;
+  }
 
   static async getInstance(): Promise<LoginService> {
     if (this.instance) return this.instance;
@@ -267,6 +282,8 @@ export class LoginService {
     // tssShare2 = TSS Share from the local storage of the device
     const { tssShare: tssShare2, tssIndex: tssShare2Index } =
       await tKey.getTSSShare(factorKey);
+      this.tssShare2 = tssShare2;
+      this.tssShare2Index = tssShare2Index;
 
     // 4. derive tss pub key, tss pubkey is implicitly formed using the dkgPubKey and the userShare (as well as userTSSIndex)
     const compressedTSSPubKey = this.calcultateCompressedPubKeyFromTSS(
@@ -286,5 +303,21 @@ export class LoginService {
     await tKey.syncLocalMetadataTransitions();
     this.setFactorKeyInLocalStore(factorKey);
     return compressedTSSPubKey;
+  }
+
+  getSigningParams() : ISigningParams {
+    const to_ret : ISigningParams = {
+     tssNonce: tKey.metadata.tssNonces![tKey.tssTag] ?? 0,
+     tssShare2:this.tssShare2,
+     tssShare2Index: this.tssShare2Index,
+     signatures: this.loginResponse.signatures.filter((sign: any) => sign !== null),
+    }
+    return to_ret;
+
+
+  }
+
+  getUser() {
+    return this.loginResponse.userInfo;
   }
 }
