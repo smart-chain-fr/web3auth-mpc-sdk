@@ -45,10 +45,23 @@ export default class Modal extends HTMLElement {
       headElement
     );
 
+    let previousStep: ModalStep | null = null;
+    let previousStepElement: HTMLElement | null = null;
+    const childs: Record<string, HTMLElement> = {
+      [ModalStep.SignIn]: createElementFromString("<w3ac-signinup></w3ac-signinup>"),
+    };
     return () => {
       headTitleElement.innerText = this.store.state.currentStep ?? "";
-      headTitleElement.onclick = () => (this.store.state = { currentStep: ModalStep.EnterBackupPassword });
       headCloseElement.onclick = this.onCloseButtonClick ?? (() => {});
+
+      const currentStep = this.store.state.currentStep;
+      const currentStepElement = childs[this.store.state.currentStep];
+
+      if (currentStep !== previousStep && previousStepElement) previousStepElement.remove();
+      if (currentStep !== previousStep && currentStepElement) popupElement.appendChild(currentStepElement);
+
+      previousStepElement = currentStepElement ?? null;
+      previousStep = this.store.state.currentStep;
     };
   };
 

@@ -26,11 +26,23 @@ class Modal extends HTMLElement {
                 <path d="M6 18L18 6M6 6L18 18" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </div>`, headElement);
+            let previousStep = null;
+            let previousStepElement = null;
+            const childs = {
+                [Modal_1.ModalStep.SignIn]: (0, utils_1.default)("<w3ac-signinup></w3ac-signinup>"),
+            };
             return () => {
                 var _a, _b;
                 headTitleElement.innerText = (_a = this.store.state.currentStep) !== null && _a !== void 0 ? _a : "";
-                headTitleElement.onclick = () => (this.store.state = { currentStep: Modal_1.ModalStep.EnterBackupPassword });
                 headCloseElement.onclick = (_b = this.onCloseButtonClick) !== null && _b !== void 0 ? _b : (() => { });
+                const currentStep = this.store.state.currentStep;
+                const currentStepElement = childs[this.store.state.currentStep];
+                if (currentStep !== previousStep && previousStepElement)
+                    previousStepElement.remove();
+                if (currentStep !== previousStep && currentStepElement)
+                    popupElement.appendChild(currentStepElement);
+                previousStepElement = currentStepElement !== null && currentStepElement !== void 0 ? currentStepElement : null;
+                previousStep = this.store.state.currentStep;
             };
         };
     }
