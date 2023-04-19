@@ -10,7 +10,24 @@ export type FactorKeyCloudMetadata = {
 };
 
 export class LoginService {
+	private static instance: LoginService;
   loginResponse: any;
+
+  static async getInstance(): Promise<LoginService> {
+    if (this.instance)
+      return this.instance;
+    this.instance = new LoginService();
+    await this.instance.init();
+    return this.instance;
+	}
+
+  async init() {
+    try {
+      await (tKey.serviceProvider as any).init();
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   async triggerLogin() {
     if (!tKey) {
@@ -48,7 +65,29 @@ export class LoginService {
     }
   }
 
-  async createUser() {
+  async getFactorKey() {
+    let factorKey: BN | null = null;
+    if (await this.isUserExisting()) {
+      if (this.isLocalSharePresent()) {
+        factorKey = this.getFactorKeyFromLocalStore();
+      } else {
+        // TO DO TRIGGER BACK UP SHARE RECOVERY
+        const backupShare = "coucou";
+        try {
+          factorKey = await  this.deserializeBackupShare(backupShare);
+        } catch (error) {
+          console.log(error);
+          throw new Error("Invalid backup share");
+        }
+      }
+      // TO DO : UNDERSTAND WHAT THIS FUNCTION DOES
+      await this.reconstructKey(factorKey);
+      return factorKey;
+    }
+    return this.createFactorKey();
+  }
+
+  async createFactorKey() {
     const factorKey = new BN(generatePrivate());
     const deviceTSSShare = new BN(generatePrivate());
     const deviceTSSIndex = 2;
@@ -59,7 +98,7 @@ export class LoginService {
       deviceTSSShare,
       deviceTSSIndex,
     });
-    await tKey.reconstructKey();
+    // await tKey.reconstructKey();
     // const {tssShare, tssIndex} = await this.getTSShare2(factorKey);
     // await this.addFactorKeyMetadata(tKey, factorKey, tssShare, tssIndex, "local storage share");
   }
@@ -75,11 +114,11 @@ export class LoginService {
     );
   }
 
-  async checkBackupShare(value: string) {
+  async deserializeBackupShare(value: string) : Promise<BN> {
     const factorKey = await (
       tKey.modules["shareSerialization"] as any
     ).deserialize(value, "mnemonic");
-    return factorKey !== null;
+    return factorKey;
   }
 
   getFactorKeyFromLocalStore() {
@@ -131,5 +170,4 @@ export class LoginService {
   async getTSShare2(factorKey: BN) {
     return await tKey.getTSSShare(factorKey);
   }
-  
 }
