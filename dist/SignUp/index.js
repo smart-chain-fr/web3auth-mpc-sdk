@@ -7,7 +7,7 @@ const store_1 = __importDefault(require("../Modal/store"));
 const Modal_1 = require("../enums/Modal");
 const utils_1 = __importDefault(require("../utils"));
 const style_1 = require("./style");
-class SignInUp extends HTMLElement {
+class SignIn extends HTMLElement {
     constructor() {
         super();
         this.render = () => { };
@@ -15,13 +15,15 @@ class SignInUp extends HTMLElement {
         this.store = store_1.default.getInstance();
         this.getPreSetRender = () => {
             (0, utils_1.default)(`<style>${this.getStyle()}</style>`, this.rootElement);
-            const button = (0, utils_1.default)(`<button class="test">Bonjour</button>`, this.rootElement);
+            const subtitleElement = (0, utils_1.default)(`<p class="subtitle">Already have an account?</p>`, this.rootElement);
+            const switchCurrentStepElement = (0, utils_1.default)(`<span class="switch">Sign in</span>`, subtitleElement);
             return () => {
-                button.onclick = () => {
+                switchCurrentStepElement.onclick = () => {
                     this.store.state = {
                         ...this.store.state,
-                        currentStep: Modal_1.ModalStep.VerifyingCode,
+                        currentStep: Modal_1.ModalStep.SignIn,
                     };
+                    this.rootElement.innerHTML = "";
                 };
             };
         };
@@ -37,4 +39,4 @@ class SignInUp extends HTMLElement {
         return style_1.SignInUpStyle;
     }
 }
-exports.default = SignInUp;
+exports.default = SignIn;

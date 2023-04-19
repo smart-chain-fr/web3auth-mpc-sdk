@@ -10,7 +10,6 @@ export const ModalStyle = `
         box-shadow: 0px 6px 12px rgba(17, 24, 39, 0.11);
         display: flex;
         flex-direction: column;
-        align-items: center;
         min-width: 493px;
     }
 

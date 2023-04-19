@@ -3,9 +3,9 @@ import { ModalStep } from "../enums/Modal";
 import createElementFromString from "../utils";
 import { SignInUpStyle } from "./style";
 
-export default class SignInUp extends HTMLElement {
+export default class SignIn extends HTMLElement {
   private render = () => {};
-  protected rootElement = this.attachShadow({ mode: "closed" });
+  protected rootElement: ShadowRoot = this.attachShadow({ mode: "closed" });
   protected store = ModalStore.getInstance();
 
   constructor() {
@@ -23,14 +23,19 @@ export default class SignInUp extends HTMLElement {
 
   private getPreSetRender = () => {
     createElementFromString(`<style>${this.getStyle()}</style>`, this.rootElement);
-    const button = createElementFromString(`<button class="test">Bonjour</button>`, this.rootElement);
+    const subtitleElement = createElementFromString(`<p class="subtitle">Don't have an account?</p>`, this.rootElement);
+    const switchCurrentStepElement = createElementFromString(
+      `<span class="switch">Create account</span>`,
+      subtitleElement
+    );
 
     return () => {
-      button.onclick = () => {
+      switchCurrentStepElement.onclick = () => {
         this.store.state = {
           ...this.store.state,
-          currentStep: ModalStep.VerifyingCode,
+          currentStep: ModalStep.SignUp,
         };
+        this.rootElement.innerHTML = "";
       };
     };
   };

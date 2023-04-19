@@ -48,20 +48,29 @@ export default class Modal extends HTMLElement {
     let previousStep: ModalStep | null = null;
     let previousStepElement: HTMLElement | null = null;
     const childs: Record<string, HTMLElement> = {
-      [ModalStep.SignIn]: createElementFromString("<w3ac-signinup></w3ac-signinup>"),
+      [ModalStep.SignIn]: createElementFromString("<w3ac-sign-in></w3ac-sign-in>"),
+      [ModalStep.SignUp]: createElementFromString("<w3ac-sign-up></w3ac-sign-up>"),
     };
     return () => {
       headTitleElement.innerText = this.store.state.currentStep ?? "";
       headCloseElement.onclick = this.onCloseButtonClick ?? (() => {});
 
       const currentStep = this.store.state.currentStep;
-      const currentStepElement = childs[this.store.state.currentStep];
+      const currentStepElement = childs[currentStep];
 
-      if (currentStep !== previousStep && previousStepElement) previousStepElement.remove();
-      if (currentStep !== previousStep && currentStepElement) popupElement.appendChild(currentStepElement);
+      if (currentStep !== previousStep && previousStepElement) {
+        // const shadowRoot = previousStepElement.shadowRoot;
+        // if (shadowRoot) {
+        //   shadowRoot.innerHTML = "";
+        // }
+        previousStepElement.remove();
+      }
+      if (currentStep !== previousStep && currentStepElement) {
+        popupElement.appendChild(currentStepElement);
+      }
 
       previousStepElement = currentStepElement ?? null;
-      previousStep = this.store.state.currentStep;
+      previousStep = currentStep;
     };
   };
 

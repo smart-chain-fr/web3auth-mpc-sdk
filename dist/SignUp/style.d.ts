@@ -1,0 +1,1 @@
+export declare const SignInUpStyle = "\n    .subtitle,\n    .switch {\n        font-family: 'Inter';\n        font-weight: 400;\n        font-size: 14px;\n    }\n\n    .subtitle {\n        color: #6B7280;\n    }\n    \n    .switch {\n        margin-left: 8px;\n        color: #4B4EFC;\n        cursor: pointer;\n    }";
