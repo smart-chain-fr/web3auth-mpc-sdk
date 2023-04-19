@@ -1,6 +1,7 @@
+import { getPubKeyPoint, ShareStore } from "@tkey/common-types";
 import BN from "bn.js";
 import { generatePrivate } from "eccrypto";
-import { getPubKeyPoint, ShareStore } from "@tkey/common-types";
+
 import { tKey } from "../tKey";
 
 export type FactorKeyCloudMetadata = {
@@ -10,16 +11,15 @@ export type FactorKeyCloudMetadata = {
 };
 
 export class LoginService {
-	private static instance: LoginService;
+  private static instance: LoginService;
   loginResponse: any;
 
   static async getInstance(): Promise<LoginService> {
-    if (this.instance)
-      return this.instance;
+    if (this.instance) return this.instance;
     this.instance = new LoginService();
     await this.instance.init();
     return this.instance;
-	}
+  }
 
   async init() {
     try {
@@ -50,7 +50,7 @@ export class LoginService {
     }
   }
 
-  async isUserExisting() {
+  async isUserExists() {
     const metadata = await tKey.storageLayer.getMetadata({
       privKey: this.loginResponse.privateKey,
     });
@@ -65,30 +65,39 @@ export class LoginService {
     }
   }
 
-  async getFactorKey() {
-    let factorKey: BN | null = null;
-    if (await this.isUserExisting()) {
-      if (this.isLocalSharePresent()) {
-        factorKey = this.getFactorKeyFromLocalStore();
-      } else {
-        // TO DO TRIGGER BACK UP SHARE RECOVERY
-        const backupShare = "coucou";
-        try {
-          factorKey = await  this.deserializeBackupShare(backupShare);
-        } catch (error) {
-          console.log(error);
-          throw new Error("Invalid backup share");
-        }
-      }
-      // TO DO : UNDERSTAND WHAT THIS FUNCTION DOES
-      await this.reconstructKey(factorKey);
-      return factorKey;
+  async getFactorKey(): Promise<BN> {
+    if (this.isLocalSharePresent()) {
+      return this.getFactorKeyFromLocalStore();
     }
-    return this.createFactorKey();
+    return await this.getFactorKeyFromBackupShare();
   }
 
-  async createFactorKey() {
-    const factorKey = new BN(generatePrivate());
+  async initializeKey() {
+    let factorKey: BN | null = null;
+    const isUserExists = await this.isUserExists();
+    if (!isUserExists) {
+      factorKey = new BN(generatePrivate());
+      await this.initializeNewKey(factorKey);
+    } else {
+      try {
+        factorKey = await this.getFactorKey();
+        await this.initializeFromExistingFactorKey(factorKey);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    try {
+      if (!factorKey) throw new Error("factor key not found");
+      await tKey.reconstructKey();
+      this.checkMissingShares();
+      const tssShare1 = this.getTSShare1();
+      const tssShare2 = this.getTSShare2(factorKey);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async initializeNewKey(factorKey: BN) {
     const deviceTSSShare = new BN(generatePrivate());
     const deviceTSSIndex = 2;
     const factorPub = getPubKeyPoint(factorKey);
@@ -98,9 +107,23 @@ export class LoginService {
       deviceTSSShare,
       deviceTSSIndex,
     });
-    // await tKey.reconstructKey();
-    // const {tssShare, tssIndex} = await this.getTSShare2(factorKey);
-    // await this.addFactorKeyMetadata(tKey, factorKey, tssShare, tssIndex, "local storage share");
+  }
+
+  async initializeFromExistingFactorKey(factorKey: BN) {
+    const factorKeyMetadata = await tKey.storageLayer.getMetadata<{
+      message: string;
+    }>({
+      privKey: factorKey,
+    });
+    if (factorKeyMetadata.message === "KEY_NOT_FOUND") {
+      throw new Error("no metadata for your factor key, reset your account");
+    }
+    const metadataShare = JSON.parse(factorKeyMetadata.message);
+    if (!metadataShare.deviceShare || !metadataShare.tssShare)
+      throw new Error("Invalid data from metadata");
+    const metadataDeviceShare = metadataShare.deviceShare;
+    await tKey.initialize({ neverInitializeNewKey: true });
+    await tKey.inputShareStoreSafe(metadataDeviceShare, true);
   }
 
   isLocalSharePresent() {
@@ -114,7 +137,7 @@ export class LoginService {
     );
   }
 
-  async deserializeBackupShare(value: string) : Promise<BN> {
+  async deserializeBackupShare(value: string): Promise<BN> {
     const factorKey = await (
       tKey.modules["shareSerialization"] as any
     ).deserialize(value, "mnemonic");
@@ -129,9 +152,22 @@ export class LoginService {
     return new BN(tKeyLocalStore.factorKey, "hex");
   }
 
-  isMissingShares() {
+  async getFactorKeyFromBackupShare(): Promise<BN> {
+    // TO DO TRIGGER BACK UP SHARE RECOVERY
+    const backupShare = "recovery share";
+    try {
+      return await this.deserializeBackupShare(backupShare);
+    } catch (error) {
+      console.log(error);
+      throw new Error("Invalid backup share");
+    }
+  }
+
+  checkMissingShares() {
     const { requiredShares } = tKey.getKeyDetails();
-    return requiredShares > 0;
+    if (requiredShares > 0) {
+      throw `Threshold not met. Required Share: ${requiredShares}. You should reset your account.`;
+    }
   }
 
   async reconstructKey(factorKey: BN) {
