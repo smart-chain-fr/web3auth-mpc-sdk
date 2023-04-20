@@ -39,7 +39,6 @@ export default class VerifyCode extends HTMLElement {
 
   private inputChangeHandler(value: string) {
     this.pinCode = value;
-    console.log("pinCode", this.pinCode);
   }
 
   private getStyle() {

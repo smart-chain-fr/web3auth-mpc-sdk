@@ -31,7 +31,6 @@ class VerifyCode extends HTMLElement {
     }
     inputChangeHandler(value) {
         this.pinCode = value;
-        console.log("pinCode", this.pinCode);
     }
     getStyle() {
         return style_1.VerifyCodeStyle;
