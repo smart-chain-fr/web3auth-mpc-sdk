@@ -51,6 +51,9 @@ export default class Modal extends HTMLElement {
       [ModalStep.SignIn]: createElementFromString("<w3ac-sign-in></w3ac-sign-in>"),
       [ModalStep.SignUp]: createElementFromString("<w3ac-sign-up></w3ac-sign-up>"),
       [ModalStep.VerifyingCode]: createElementFromString("<w3ac-verify-code></w3ac-verify-code>"),
+      [ModalStep.EnterBackupPassword]: createElementFromString(
+        "<w3ac-enter-backup-password></w3ac-enter-backup-password>"
+      ),
     };
     return () => {
       headTitleElement.innerText = this.store.state.currentStep ?? "";
