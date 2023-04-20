@@ -341,4 +341,34 @@ export class LoginService {
   ): Promise<SafeEventEmitterProvider | null> {
     return await setupWeb3(chainConfig, loginReponse, signingParams);
   }
+
+  async getAccounts() {
+    if (!this.provider) {
+      console.log("web3 not initialized yet");
+      return;
+    }
+    const address = (await this.provider.eth.getAccounts())[0];
+    console.log(address);
+    return address;
+  };
+
+  // async sendTransaction() {
+  //   if (!this.provider) {
+  //     console.log("web3 not initialized yet");
+  //     return;
+  //   }
+  //   const fromAddress = (await this.provider.eth.getAccounts())[0];
+
+  //   const destination = "0x2E464670992574A613f10F7682D5057fB507Cc21";
+  //   const amount = this.provider.utils.toWei("0.0001"); // Convert 1 ether to wei
+
+  //   // Submit transaction to the blockchain and wait for it to be mined
+  //   console.log("Sending transaction...");
+  //   const receipt = await this.provider.eth.sendTransaction({
+  //     from: fromAddress,
+  //     to: destination,
+  //     value: amount,
+  //   });
+  //   console.log(receipt);
+  // }
 }
