@@ -11,5 +11,5 @@ export default class EmailAddressInput extends HTMLElement {
     disconnectedCallback(): void;
     private getPreSetRender;
     private inputChangeHandler;
-    getStyle(): string;
+    private getStyle;
 }

@@ -17,8 +17,15 @@ class SignIn extends HTMLElement {
             (0, domUtils_1.createElementFromString)(`<style>${this.getStyle()}</style>`, this.rootElement);
             const subtitleElement = (0, domUtils_1.createElementFromString)(`<p class="subtitle">Don't have an account?</p>`, this.rootElement);
             const switchCurrentStepElement = (0, domUtils_1.createElementFromString)(`<span class="switch">Create account</span>`, subtitleElement);
-            (0, domUtils_1.createElementFromString)(`<w3ac-email-address-input></w3ac-email-address-input>`, this.rootElement);
             switchCurrentStepElement.onclick = () => this.toggleSignInUp();
+            (0, domUtils_1.createElementFromString)(`<w3ac-email-address-input></w3ac-email-address-input>`, this.rootElement);
+            (0, domUtils_1.createElementFromString)(`<w3ac-button text="Connect" variant="primary"></w3ac-button>`, this.rootElement);
+            (0, domUtils_1.createElementFromString)(`<div class="separator">
+        <span class="line"></span>
+        <span class="separator-text">or</span>
+        <span class="line"></span>
+      </div>`, this.rootElement);
+            (0, domUtils_1.createElementFromString)(`<w3ac-button text="Connect wallet" variant="secondary"></w3ac-button>`, this.rootElement);
             return () => { };
         };
         this.toggleSignInUp = () => {

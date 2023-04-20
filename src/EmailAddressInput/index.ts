@@ -45,7 +45,7 @@ export default class EmailAddressInput extends HTMLElement {
     this.onInputChange?.(value);
   };
 
-  public getStyle() {
+  private getStyle() {
     return EmailAddressInputStyle;
   }
 }
