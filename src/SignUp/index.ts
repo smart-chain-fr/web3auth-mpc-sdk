@@ -59,7 +59,6 @@ export default class SignUp extends HTMLElement {
   };
 
   private onConnectButtonClick() {
-    console.log({ userEmail: this.userEmailAddress });
     this.storeUserEmail();
     // TODO: Call API endpoint to send email
     this.goToVerifyCode();

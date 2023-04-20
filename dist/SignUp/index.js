@@ -41,7 +41,6 @@ class SignUp extends HTMLElement {
         console.log("disconnectedCallback", this);
     }
     onConnectButtonClick() {
-        console.log({ userEmail: this.userEmailAddress });
         this.storeUserEmail();
         this.goToVerifyCode();
     }

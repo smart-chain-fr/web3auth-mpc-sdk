@@ -2,6 +2,7 @@ import { ModalStep } from "../enums/Modal";
 interface IModalState {
     currentStep: ModalStep;
     userEmail: string;
+    pinCode: string;
 }
 export default class ModalStore {
     private static instance;

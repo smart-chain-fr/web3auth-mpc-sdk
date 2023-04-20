@@ -11,6 +11,7 @@ class ModalStore {
         this._state = {
             currentStep: Modal_1.ModalStep.SignIn,
             userEmail: "",
+            pinCode: "",
         };
     }
     static getInstance() {
