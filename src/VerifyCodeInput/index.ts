@@ -40,6 +40,8 @@ export default class VerifyCodeInput extends HTMLElement {
     createElementFromString(PasteIconSvg, pasteButtonElement);
     createElementFromString(`<span>Paste</span>`, pasteButtonElement);
     pasteButtonElement.onclick = () => this.pasteButtonClickHandler();
+    verifyCodeInputElement.onchange = verifyCodeInputElement.oninput = () =>
+      this.inputChangeHandler(verifyCodeInputElement.value);
 
     return () => {
       verifyCodeInputElement.value = this.pasteContent;

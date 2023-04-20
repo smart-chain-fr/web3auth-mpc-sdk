@@ -19,6 +19,7 @@ class VerifyCodeInput extends HTMLElement {
             (0, domUtils_1.createElementFromString)(paste_1.PasteIconSvg, pasteButtonElement);
             (0, domUtils_1.createElementFromString)(`<span>Paste</span>`, pasteButtonElement);
             pasteButtonElement.onclick = () => this.pasteButtonClickHandler();
+            verifyCodeInputElement.onchange = verifyCodeInputElement.oninput = () => this.inputChangeHandler(verifyCodeInputElement.value);
             return () => {
                 verifyCodeInputElement.value = this.pasteContent;
             };
