@@ -3,4 +3,5 @@ export enum ModalStep {
   SignUp = "Sign Up",
   VerifyingCode = "Enter your verification code",
   EnterBackupPassword = "Enter your backup password",
+  AccountConnected = "Your account is connected",
 }

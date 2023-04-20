@@ -7,6 +7,8 @@ class EnterBackupPassword extends HTMLElement {
         super();
         this.render = null;
         this.rootElement = this.attachShadow({ mode: "closed" });
+        this.placeholder = "Enter your password";
+        this.userPassword = "";
     }
     connectedCallback() {
         var _a;
@@ -18,7 +20,18 @@ class EnterBackupPassword extends HTMLElement {
     }
     getPreSetRender() {
         (0, domUtils_1.createElementFromString)(`<style>${this.getStyle()}</style>`, this.rootElement);
+        (0, domUtils_1.createElementFromString)(`<p class="label">Password</p>`, this.rootElement);
+        const passwordInputElement = (0, domUtils_1.createElementFromString)(`<input class="input" type="password" class="input" placeholder="${this.placeholder}" />`, this.rootElement);
+        passwordInputElement.onchange = passwordInputElement.oninput = () => this.onInputChange(passwordInputElement.value);
+        const buttonElement = (0, domUtils_1.createElementFromString)(`<w3ac-button text="Connect" variant="primary"></w3ac-button>`, this.rootElement);
+        buttonElement.onClick = () => this.onButtonClick();
         return () => { };
+    }
+    onButtonClick() {
+        console.log("onButtonClick", this.userPassword);
+    }
+    onInputChange(value) {
+        this.userPassword = value;
     }
     getStyle() {
         return style_1.EnterBackupPasswordStyle;

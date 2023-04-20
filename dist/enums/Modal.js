@@ -7,4 +7,5 @@ var ModalStep;
     ModalStep["SignUp"] = "Sign Up";
     ModalStep["VerifyingCode"] = "Enter your verification code";
     ModalStep["EnterBackupPassword"] = "Enter your backup password";
+    ModalStep["AccountConnected"] = "Your account is connected";
 })(ModalStep = exports.ModalStep || (exports.ModalStep = {}));
