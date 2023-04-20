@@ -25,9 +25,11 @@ class EmailAddressInput extends HTMLElement {
     }
     getPreSetRender() {
         (0, domUtils_1.createElementFromString)(`<style>${this.getStyle()}</style>`, this.rootElement);
-        const inputContainerElement = (0, domUtils_1.createElementFromString)(`<div class="input-container"></div`, this.rootElement);
+        const containerElement = (0, domUtils_1.createElementFromString)(`<div class="container"></div>`, this.rootElement);
+        (0, domUtils_1.createElementFromString)(`<p class="label">Email</p>`, containerElement);
+        const inputContainerElement = (0, domUtils_1.createElementFromString)(`<div class="input-container"></div`, containerElement);
         (0, domUtils_1.createElementFromString)(message_1.MessageIconSvg, inputContainerElement);
-        const inputElement = (0, domUtils_1.createElementFromString)(`<input type="text" class="input" id="w3ac-input" />`, inputContainerElement);
+        const inputElement = (0, domUtils_1.createElementFromString)(`<input type="text" class="input" />`, inputContainerElement);
         inputElement.placeholder = this.placeholder;
         inputElement.onchange = inputElement.oninput = () => this.inputChangeHandler(inputElement.value);
         return () => { };

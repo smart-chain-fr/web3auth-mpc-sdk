@@ -27,10 +27,12 @@ export default class EmailAddressInput extends HTMLElement {
 
   private getPreSetRender() {
     createElementFromString(`<style>${this.getStyle()}</style>`, this.rootElement);
-    const inputContainerElement = createElementFromString(`<div class="input-container"></div`, this.rootElement);
+    const containerElement = createElementFromString(`<div class="container"></div>`, this.rootElement);
+    createElementFromString(`<p class="label">Email</p>`, containerElement);
+    const inputContainerElement = createElementFromString(`<div class="input-container"></div`, containerElement);
     createElementFromString(MessageIconSvg, inputContainerElement);
     const inputElement = createElementFromString(
-      `<input type="text" class="input" id="w3ac-input" />`,
+      `<input type="text" class="input" />`,
       inputContainerElement
     ) as HTMLInputElement;
     inputElement.placeholder = this.placeholder;

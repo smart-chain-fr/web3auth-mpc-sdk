@@ -1,4 +1,18 @@
 export const EmailAddressInputStyle = `
+    .container {
+        margin: 0;
+        margin-top: 30px;
+    }
+
+    .label {
+        margin: 0;
+        margin-bottom: 8px;
+        font-family: 'Inter';
+        font-weight: 500;
+        font-size: 14px;
+        color: #111827;
+    }
+
     .input-container {
         display: flex;
         align-items: center;
