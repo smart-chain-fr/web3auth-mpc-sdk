@@ -1,13 +1,11 @@
+import { getPubKeyECC, getPubKeyPoint, Point, ShareStore } from "@tkey/common-types";
+import { SafeEventEmitterProvider } from "@toruslabs/base-controllers";
 import BN from "bn.js";
 import { generatePrivate } from "eccrypto";
-import {
-  getPubKeyECC,
-  getPubKeyPoint,
-  Point,
-  ShareStore,
-} from "@tkey/common-types";
-import { tKey } from "./tKey";
+
 import CalcultationHelper from "./calculationHelper";
+import { tKey } from "./tKey";
+import { setupWeb3 } from "./utils";
 
 export type FactorKeyCloudMetadata = {
   deviceShare: ShareStore;
@@ -16,12 +14,12 @@ export type FactorKeyCloudMetadata = {
 };
 
 export type ISigningParams = {
-  tssNonce: number,
-  tssShare2:  BN,
-  tssShare2Index: number,
-  compressedTSSPubKey?: Buffer,
-  signatures: any // TO DO TYPE THIS
-}
+  tssNonce: number;
+  tssShare2: BN;
+  tssShare2Index: number;
+  compressedTSSPubKey?: Buffer;
+  signatures: any; // TO DO TYPE THIS
+};
 
 export class LoginService {
   private static instance: LoginService;
@@ -282,8 +280,8 @@ export class LoginService {
     // tssShare2 = TSS Share from the local storage of the device
     const { tssShare: tssShare2, tssIndex: tssShare2Index } =
       await tKey.getTSSShare(factorKey);
-      this.tssShare2 = tssShare2;
-      this.tssShare2Index = tssShare2Index;
+    this.tssShare2 = tssShare2;
+    this.tssShare2Index = tssShare2Index;
 
     // 4. derive tss pub key, tss pubkey is implicitly formed using the dkgPubKey and the userShare (as well as userTSSIndex)
     const compressedTSSPubKey = this.calcultateCompressedPubKeyFromTSS(
@@ -305,19 +303,27 @@ export class LoginService {
     return compressedTSSPubKey;
   }
 
-  getSigningParams() : ISigningParams {
-    const to_ret : ISigningParams = {
-     tssNonce: tKey.metadata.tssNonces![tKey.tssTag] ?? 0,
-     tssShare2:this.tssShare2,
-     tssShare2Index: this.tssShare2Index,
-     signatures: this.loginResponse.signatures.filter((sign: any) => sign !== null),
-    }
+  getSigningParams(): ISigningParams {
+    const to_ret: ISigningParams = {
+      tssNonce: tKey.metadata.tssNonces![tKey.tssTag] ?? 0,
+      tssShare2: this.tssShare2,
+      tssShare2Index: this.tssShare2Index,
+      signatures: this.loginResponse.signatures.filter(
+        (sign: any) => sign !== null
+      ),
+    };
     return to_ret;
-
-
   }
 
   getUser() {
     return this.loginResponse.userInfo;
+  }
+
+  async getProvider(
+    chainConfig: any,
+    loginReponse: any,
+    signingParams: any
+  ): Promise<SafeEventEmitterProvider | null> {
+    return await setupWeb3(chainConfig, loginReponse, signingParams);
   }
 }

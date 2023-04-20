@@ -13,11 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoginService = void 0;
+const common_types_1 = require("@tkey/common-types");
 const bn_js_1 = __importDefault(require("bn.js"));
 const eccrypto_1 = require("eccrypto");
-const common_types_1 = require("@tkey/common-types");
-const tKey_1 = require("./tKey");
 const calculationHelper_1 = __importDefault(require("./calculationHelper"));
+const tKey_1 = require("./tKey");
+const utils_1 = require("./utils");
 class LoginService {
     constructor() {
         this.tssShare2 = new bn_js_1.default(0);
@@ -250,6 +251,11 @@ class LoginService {
     }
     getUser() {
         return this.loginResponse.userInfo;
+    }
+    getProvider(chainConfig, loginReponse, signingParams) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield (0, utils_1.setupWeb3)(chainConfig, loginReponse, signingParams);
+        });
     }
 }
 exports.LoginService = LoginService;

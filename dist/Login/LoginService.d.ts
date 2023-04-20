@@ -1,6 +1,7 @@
 /// <reference types="node" />
-import BN from "bn.js";
 import { Point, ShareStore } from "@tkey/common-types";
+import { SafeEventEmitterProvider } from "@toruslabs/base-controllers";
+import BN from "bn.js";
 export type FactorKeyCloudMetadata = {
     deviceShare: ShareStore;
     tssShare: BN;
@@ -38,4 +39,5 @@ export declare class LoginService {
     initTSSfromFactorKey(factorKey: BN): Promise<Buffer>;
     getSigningParams(): ISigningParams;
     getUser(): any;
+    getProvider(chainConfig: any, loginReponse: any, signingParams: any): Promise<SafeEventEmitterProvider | null>;
 }

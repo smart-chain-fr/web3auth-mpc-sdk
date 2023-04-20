@@ -53,7 +53,6 @@
     "bn.js": "^5.2.1",
     "copy-webpack-plugin": "^11.0.0",
     "eccrypto": "^1.1.6",
-    "ethers": "^5.7.2",
     "html-webpack-plugin": "^5.5.0",
     "jsrsasign": "^10.6.1",
     "keccak256": "^1.0.6",
