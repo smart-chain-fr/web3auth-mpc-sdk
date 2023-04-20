@@ -41,9 +41,9 @@ export default class EmailAddressInput extends HTMLElement {
     return () => {};
   }
 
-  private inputChangeHandler = (value: string) => {
+  private inputChangeHandler(value: string) {
     this.onInputChange?.(value);
-  };
+  }
 
   private getStyle() {
     return EmailAddressInputStyle;

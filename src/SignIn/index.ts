@@ -9,6 +9,7 @@ export default class SignIn extends HTMLElement {
   private render: (() => void) | null = null;
   private rootElement: ShadowRoot = this.attachShadow({ mode: "closed" });
   private store = ModalStore.getInstance();
+  private userEmailAddress: string = "";
 
   constructor() {
     super();
@@ -31,12 +32,16 @@ export default class SignIn extends HTMLElement {
       subtitleElement
     );
     switchCurrentStepElement.onclick = () => this.toggleSignInUp();
-    createElementFromString(`<w3ac-email-address-input></w3ac-email-address-input>`, this.rootElement) as HTMLElement &
-      IInputProps;
-    createElementFromString(
+    const emailAddressInputElement = createElementFromString(
+      `<w3ac-email-address-input></w3ac-email-address-input>`,
+      this.rootElement
+    ) as HTMLElement & IInputProps;
+    emailAddressInputElement.onInputChange = (value) => this.inputChangeHandler(value);
+    const connectButton = createElementFromString(
       `<w3ac-button text="Connect" variant="primary"></w3ac-button>`,
       this.rootElement
     ) as HTMLElement & IButtonProps;
+    connectButton.onClick = () => this.onConnectButtonClick();
     createElementFromString(
       `<div class="separator">
         <span class="line"></span>
@@ -53,12 +58,21 @@ export default class SignIn extends HTMLElement {
     return () => {};
   };
 
-  private toggleSignInUp = () => {
+  private onConnectButtonClick() {
+    console.log(this.userEmailAddress);
+    // TODO: Call API endpoint to send email
+  }
+
+  private inputChangeHandler(value: string) {
+    this.userEmailAddress = value;
+  }
+
+  private toggleSignInUp() {
     this.store.state = {
       ...this.store.state,
       currentStep: ModalStep.SignUp,
     };
-  };
+  }
 
   private getStyle() {
     return SignInUpStyle;

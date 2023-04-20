@@ -13,13 +13,16 @@ class SignIn extends HTMLElement {
         this.render = null;
         this.rootElement = this.attachShadow({ mode: "closed" });
         this.store = store_1.default.getInstance();
+        this.userEmailAddress = "";
         this.getPreSetRender = () => {
             (0, domUtils_1.createElementFromString)(`<style>${this.getStyle()}</style>`, this.rootElement);
             const subtitleElement = (0, domUtils_1.createElementFromString)(`<p class="subtitle">Don't have an account?</p>`, this.rootElement);
             const switchCurrentStepElement = (0, domUtils_1.createElementFromString)(`<span class="switch">Create account</span>`, subtitleElement);
             switchCurrentStepElement.onclick = () => this.toggleSignInUp();
-            (0, domUtils_1.createElementFromString)(`<w3ac-email-address-input></w3ac-email-address-input>`, this.rootElement);
-            (0, domUtils_1.createElementFromString)(`<w3ac-button text="Connect" variant="primary"></w3ac-button>`, this.rootElement);
+            const emailAddressInputElement = (0, domUtils_1.createElementFromString)(`<w3ac-email-address-input></w3ac-email-address-input>`, this.rootElement);
+            emailAddressInputElement.onInputChange = (value) => this.inputChangeHandler(value);
+            const connectButton = (0, domUtils_1.createElementFromString)(`<w3ac-button text="Connect" variant="primary"></w3ac-button>`, this.rootElement);
+            connectButton.onClick = () => this.onConnectButtonClick();
             (0, domUtils_1.createElementFromString)(`<div class="separator">
         <span class="line"></span>
         <span class="separator-text">or</span>
@@ -27,12 +30,6 @@ class SignIn extends HTMLElement {
       </div>`, this.rootElement);
             (0, domUtils_1.createElementFromString)(`<w3ac-button text="Connect wallet" variant="secondary"></w3ac-button>`, this.rootElement);
             return () => { };
-        };
-        this.toggleSignInUp = () => {
-            this.store.state = {
-                ...this.store.state,
-                currentStep: Modal_1.ModalStep.SignUp,
-            };
         };
     }
     connectedCallback() {
@@ -42,6 +39,18 @@ class SignIn extends HTMLElement {
     }
     disconnectedCallback() {
         console.log("disconnectedCallback", this);
+    }
+    onConnectButtonClick() {
+        console.log(this.userEmailAddress);
+    }
+    inputChangeHandler(value) {
+        this.userEmailAddress = value;
+    }
+    toggleSignInUp() {
+        this.store.state = {
+            ...this.store.state,
+            currentStep: Modal_1.ModalStep.SignUp,
+        };
     }
     getStyle() {
         return style_1.SignInUpStyle;

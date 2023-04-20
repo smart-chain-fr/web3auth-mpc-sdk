@@ -10,10 +10,6 @@ class EmailAddressInput extends HTMLElement {
         this.placeholder = "Email address";
         this.onInputChange = null;
         this.rootElement = this.attachShadow({ mode: "closed" });
-        this.inputChangeHandler = (value) => {
-            var _a;
-            (_a = this.onInputChange) === null || _a === void 0 ? void 0 : _a.call(this, value);
-        };
     }
     connectedCallback() {
         var _a;
@@ -33,6 +29,10 @@ class EmailAddressInput extends HTMLElement {
         inputElement.placeholder = this.placeholder;
         inputElement.onchange = inputElement.oninput = () => this.inputChangeHandler(inputElement.value);
         return () => { };
+    }
+    inputChangeHandler(value) {
+        var _a;
+        (_a = this.onInputChange) === null || _a === void 0 ? void 0 : _a.call(this, value);
     }
     getStyle() {
         return style_1.EmailAddressInputStyle;
