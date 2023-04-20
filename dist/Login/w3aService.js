@@ -12,37 +12,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.W3aService = void 0;
 const ethersRPC_1 = __importDefault(require("./ethersRPC"));
 const web3auth_1 = require("@web3auth-mpc/web3auth");
 const openlogin_adapter_1 = require("@web3auth-mpc/openlogin-adapter");
 const torus_mpc_1 = require("torus-mpc");
-const clientId = "BHMup7Fr9298T8YP9MZ61bjOHuO_ZYBPSkOfGyialHDWHlEkOuDpHKJ0liGOuNsLLAv_TH45NmxULNMohJrd8Xk";
-class w3aService {
+class W3aService {
     constructor() {
-        this.web3auth = null;
-        this.provider = null;
+        this._web3auth = null;
+        this._provider = null;
     }
-    initEthAuth() {
+    static getInstance() {
+        if (this.instance)
+            return this.instance;
+        this.instance = new W3aService();
+        return this.instance;
+    }
+    get web3auth() {
+        return this._web3auth;
+    }
+    get provider() {
+        return this._provider;
+    }
+    initEthAuth(web3AuthOptions) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const web3auth = new web3auth_1.Web3Auth({
-                    clientId,
-                    uiConfig: {
-                        appLogo: "https://images.web3auth.io/web3auth-logo-w.svg",
-                        theme: "light",
-                        loginMethodsOrder: ["twitter", "google"],
-                    },
-                    chainConfig: {
-                        chainNamespace: "eip155",
-                        chainId: "0x5",
-                        rpcTarget: "https://rpc.ankr.com/eth_goerli",
-                        displayName: "Goerli Testnet",
-                        blockExplorer: "https://goerli.etherscan.io/",
-                        ticker: "ETH",
-                        tickerName: "Ethereum",
-                    },
-                    enableLogging: true,
-                });
+                const web3auth = new web3auth_1.Web3Auth(web3AuthOptions);
                 const openloginAdapter = new openlogin_adapter_1.OpenloginAdapter({
                     loginSettings: {
                         mfaLevel: "mandatory",
@@ -56,7 +51,7 @@ class w3aService {
                     adapterSettings: {
                         _iframeUrl: "https://mpc-beta.openlogin.com",
                         network: "development",
-                        clientId,
+                        clientId: web3AuthOptions.clientId,
                     },
                 });
                 web3auth.configureAdapter(openloginAdapter);
@@ -76,9 +71,9 @@ class w3aService {
                         },
                     },
                 });
-                this.web3auth = web3auth;
+                this._web3auth = web3auth;
                 if (web3auth.provider) {
-                    this.provider = web3auth.provider;
+                    this._provider = web3auth.provider;
                 }
             }
             catch (error) {
@@ -86,113 +81,104 @@ class w3aService {
             }
         });
     }
-    ;
     login() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this.web3auth) {
+            if (!this._web3auth) {
                 console.log("web3auth not initialized yet");
                 return;
             }
-            const web3authProvider = yield this.web3auth.connect();
-            this.provider = web3authProvider;
+            const web3authProvider = yield this._web3auth.connect();
+            this._provider = web3authProvider;
             (0, torus_mpc_1.generatePrecompute)();
         });
     }
-    ;
     getUserInfo() {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this.web3auth) {
+            if (!this._web3auth) {
                 console.log("web3auth not initialized yet");
                 return;
             }
-            const user = yield ((_a = this.web3auth) === null || _a === void 0 ? void 0 : _a.getUserInfo());
+            const user = yield ((_a = this._web3auth) === null || _a === void 0 ? void 0 : _a.getUserInfo());
             console.log(user);
         });
     }
-    ;
     logout() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this.web3auth) {
+            if (!this._web3auth) {
                 console.log("web3auth not initialized yet");
                 return;
             }
-            yield this.web3auth.logout();
-            this.provider = null;
+            yield this._web3auth.logout();
+            this._provider = null;
         });
     }
-    ;
     getChainId() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this.provider) {
+            if (!this._provider) {
                 console.log("provider not initialized yet");
                 return;
             }
-            const rpc = new ethersRPC_1.default(this.provider);
+            const rpc = new ethersRPC_1.default(this._provider);
             const chainId = yield rpc.getChainId();
             console.log(chainId);
         });
     }
-    ;
     getAccounts() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this.provider) {
+            if (!this._provider) {
                 console.log("provider not initialized yet");
                 return;
             }
-            const rpc = new ethersRPC_1.default(this.provider);
+            const rpc = new ethersRPC_1.default(this._provider);
             const address = yield rpc.getAccounts();
             console.log("ETH Address: " + address);
         });
     }
-    ;
     getBalance() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this.provider) {
+            if (!this._provider) {
                 console.log("provider not initialized yet");
                 return;
             }
-            const rpc = new ethersRPC_1.default(this.provider);
+            const rpc = new ethersRPC_1.default(this._provider);
             const balance = yield rpc.getBalance();
             console.log(balance);
         });
     }
-    ;
     signTransaction() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this.provider) {
+            if (!this._provider) {
                 console.log("provider not initialized yet");
                 return;
             }
-            const rpc = new ethersRPC_1.default(this.provider);
+            const rpc = new ethersRPC_1.default(this._provider);
             const receipt = yield rpc.signMessage();
             console.log(receipt);
         });
     }
-    ;
     sendTransaction() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this.provider) {
+            if (!this._provider) {
                 console.log("provider not initialized yet");
                 return;
             }
-            const rpc = new ethersRPC_1.default(this.provider);
+            const rpc = new ethersRPC_1.default(this._provider);
             const receipt = yield rpc.sendTransaction();
             console.log(receipt);
         });
     }
-    ;
     signMessage() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this.provider) {
+            if (!this._provider) {
                 console.log("provider not initialized yet");
                 return;
             }
-            const rpc = new ethersRPC_1.default(this.provider);
+            const rpc = new ethersRPC_1.default(this._provider);
             const signedMessage = yield rpc.signMessage();
             console.log(signedMessage);
         });
     }
-    ;
 }
-exports.default = w3aService;
+exports.W3aService = W3aService;
+exports.default = W3aService;

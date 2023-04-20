@@ -2,171 +2,190 @@ import { SafeEventEmitterProvider } from "@web3auth-mpc/base";
 import RPC from "./ethersRPC"; // for using web3.js
 
 // MPC stuff
-import { Web3Auth } from "@web3auth-mpc/web3auth";
+import { Web3Auth, Web3AuthOptions } from "@web3auth-mpc/web3auth";
 import { OpenloginAdapter } from "@web3auth-mpc/openlogin-adapter";
-import { tssDataCallback, tssGetPublic, tssSign, generatePrecompute } from "torus-mpc";
+import {
+  tssDataCallback,
+  tssGetPublic,
+  tssSign,
+  generatePrecompute,
+} from "torus-mpc";
 
+export class W3aService {
+  private static instance: W3aService;
 
-const clientId = "BHMup7Fr9298T8YP9MZ61bjOHuO_ZYBPSkOfGyialHDWHlEkOuDpHKJ0liGOuNsLLAv_TH45NmxULNMohJrd8Xk"; // get from https://dashboard.web3auth.io
+  private _web3auth: Web3Auth | null = null;
+  private _provider: SafeEventEmitterProvider | null = null;
 
-class w3aService {
-  web3auth : Web3Auth | null = null;
-  provider : SafeEventEmitterProvider | null = null;
+  static getInstance(): W3aService {
+    if (this.instance) return this.instance;
+    this.instance = new W3aService();
+    return this.instance;
+  }
 
+  public get web3auth() {
+    return this._web3auth;
+  }
 
-		async initEthAuth() {
-			try {
-				const web3auth = new Web3Auth({
-					clientId,
-					uiConfig: {
-						appLogo: "https://images.web3auth.io/web3auth-logo-w.svg",
-						theme: "light",
-						loginMethodsOrder: ["twitter", "google"],
-					},
-					chainConfig: {
-						chainNamespace: "eip155",
-						chainId: "0x5",
-						rpcTarget: "https://rpc.ankr.com/eth_goerli",
-						displayName: "Goerli Testnet",
-						blockExplorer: "https://goerli.etherscan.io/",
-						ticker: "ETH",
-						tickerName: "Ethereum",
-					},
-					enableLogging: true,
-				});
+  public get provider() {
+    return this._provider;
+  }
 
-				const openloginAdapter = new OpenloginAdapter({
-					loginSettings: {
-						mfaLevel: "mandatory",
-					},
-					tssSettings: {
-						useTSS: true,
-						tssGetPublic,
-						tssSign,
-						tssDataCallback,
-					},
-					adapterSettings: {
-						_iframeUrl: "https://mpc-beta.openlogin.com",
-						network: "development",
-						clientId,
-					},
-				});
+  async initEthAuth(web3AuthOptions: Web3AuthOptions) {
+    try {
+      const web3auth = new Web3Auth(
+        web3AuthOptions
+        // 	{
+        //     clientId,
+        //     uiConfig: {
+        //       appLogo: "https://images.web3auth.io/web3auth-logo-w.svg",
+        //       theme: "light",
+        //       loginMethodsOrder: ["twitter", "google"],
+        //     },
+        //     chainConfig: {
+        //       chainNamespace: "eip155",
+        //       chainId: "0x5",
+        //       rpcTarget: "https://rpc.ankr.com/eth_goerli",
+        //       displayName: "Goerli Testnet",
+        //       blockExplorer: "https://goerli.etherscan.io/",
+        //       ticker: "ETH",
+        //       tickerName: "Ethereum",
+        //     },
+        //     enableLogging: true,
+        //   }
+      );
 
-				web3auth.configureAdapter(openloginAdapter);
-				await web3auth.initModal({
-					modalConfig: {
-						"torus-evm": {
-							label: "Torus Wallet",
-							showOnModal: false,
-						},
-						metamask: {
-							label: "Metamask",
-							showOnModal: false,
-						},
-						"wallet-connect-v1": {
-							label: "Wallet Connect",
-							showOnModal: false,
-						},
-					},
-				});
-				this.web3auth = web3auth;
+      const openloginAdapter = new OpenloginAdapter({
+        loginSettings: {
+          mfaLevel: "mandatory",
+        },
+        tssSettings: {
+          useTSS: true,
+          tssGetPublic,
+          tssSign,
+          tssDataCallback,
+        },
+        adapterSettings: {
+          _iframeUrl: "https://mpc-beta.openlogin.com",
+          network: "development",
+          clientId: web3AuthOptions.clientId,
+        },
+      });
 
-				if (web3auth.provider) {
-					this.provider = web3auth.provider;
-				}
-			} catch (error) {
-				console.log("error", error);
-			}
-		};
+      web3auth.configureAdapter(openloginAdapter);
+      await web3auth.initModal({
+        modalConfig: {
+          "torus-evm": {
+            label: "Torus Wallet",
+            showOnModal: false,
+          },
+          metamask: {
+            label: "Metamask",
+            showOnModal: false,
+          },
+          "wallet-connect-v1": {
+            label: "Wallet Connect",
+            showOnModal: false,
+          },
+        },
+      });
+      this._web3auth = web3auth;
 
-	async login() {
-		if (!this.web3auth) {
-			console.log("web3auth not initialized yet");
-			return;
-		}
-		const web3authProvider = await this.web3auth.connect();
-		this.provider = web3authProvider;
-		generatePrecompute(); // <-- So one precompute would be available to your users.
-	};
+      if (web3auth.provider) {
+        this._provider = web3auth.provider;
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
 
-	async getUserInfo() {
-		if (!this.web3auth) {
-			console.log("web3auth not initialized yet");
-			return;
-		}
-		const user = await this.web3auth?.getUserInfo();
-		console.log(user);
-	};
+  async login() {
+    if (!this._web3auth) {
+      console.log("web3auth not initialized yet");
+      return;
+    }
+    const web3authProvider = await this._web3auth.connect();
+    this._provider = web3authProvider;
+    generatePrecompute(); // <-- So one precompute would be available to your users.
+  }
 
-	async logout() {
-		if (!this.web3auth) {
-			console.log("web3auth not initialized yet");
-			return;
-		}
-		await this.web3auth.logout();
-		this.provider = null;
-	};
+  async getUserInfo() {
+    if (!this._web3auth) {
+      console.log("web3auth not initialized yet");
+      return;
+    }
+    const user = await this._web3auth?.getUserInfo();
+    console.log(user);
+  }
 
-	async getChainId() {
-		if (!this.provider) {
-			console.log("provider not initialized yet");
-			return;
-		}
-		const rpc = new RPC(this.provider);
-		const chainId = await rpc.getChainId();
-		console.log(chainId);
-	};
-  
-	async getAccounts() {
-    if (!this.provider) {
-			console.log("provider not initialized yet");
-			return;
-		}
-		const rpc = new RPC(this.provider);
-		const address = await rpc.getAccounts();
-		console.log("ETH Address: " + address);
-	};
+  async logout() {
+    if (!this._web3auth) {
+      console.log("web3auth not initialized yet");
+      return;
+    }
+    await this._web3auth.logout();
+    this._provider = null;
+  }
 
-	async getBalance() {
-		if (!this.provider) {
-			console.log("provider not initialized yet");
-			return;
-		}
-		const rpc = new RPC(this.provider);
-		const balance = await rpc.getBalance();
-		console.log(balance);
-	};
+  async getChainId() {
+    if (!this._provider) {
+      console.log("provider not initialized yet");
+      return;
+    }
+    const rpc = new RPC(this._provider);
+    const chainId = await rpc.getChainId();
+    console.log(chainId);
+  }
 
-	async signTransaction() {
-		if (!this.provider) {
-			console.log("provider not initialized yet");
-			return;
-		}
-		const rpc = new RPC(this.provider);
-		const receipt = await rpc.signMessage();
-		console.log(receipt);
-	};
+  async getAccounts() {
+    if (!this._provider) {
+      console.log("provider not initialized yet");
+      return;
+    }
+    const rpc = new RPC(this._provider);
+    const address = await rpc.getAccounts();
+    console.log("ETH Address: " + address);
+  }
 
-	async sendTransaction() {
-		if (!this.provider) {
-			console.log("provider not initialized yet");
-			return;
-		}
-		const rpc = new RPC(this.provider);
-		const receipt = await rpc.sendTransaction();
-		console.log(receipt);
-	};
+  async getBalance() {
+    if (!this._provider) {
+      console.log("provider not initialized yet");
+      return;
+    }
+    const rpc = new RPC(this._provider);
+    const balance = await rpc.getBalance();
+    console.log(balance);
+  }
 
-	async signMessage() {
-		if (!this.provider) {
-			console.log("provider not initialized yet");
-			return;
-		}
-		const rpc = new RPC(this.provider);
-		const signedMessage = await rpc.signMessage();
-		console.log(signedMessage);
-	};
+  async signTransaction() {
+    if (!this._provider) {
+      console.log("provider not initialized yet");
+      return;
+    }
+    const rpc = new RPC(this._provider);
+    const receipt = await rpc.signMessage();
+    console.log(receipt);
+  }
 
+  async sendTransaction() {
+    if (!this._provider) {
+      console.log("provider not initialized yet");
+      return;
+    }
+    const rpc = new RPC(this._provider);
+    const receipt = await rpc.sendTransaction();
+    console.log(receipt);
+  }
+
+  async signMessage() {
+    if (!this._provider) {
+      console.log("provider not initialized yet");
+      return;
+    }
+    const rpc = new RPC(this._provider);
+    const signedMessage = await rpc.signMessage();
+    console.log(signedMessage);
+  }
 }
 
-export default w3aService;
+export default W3aService;
