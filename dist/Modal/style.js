@@ -2,6 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ModalStyle = void 0;
 exports.ModalStyle = `
+    * {
+        box-sizing: border-box;
+    }
+
     .popup {
         padding: 16px;
         position: fixed;

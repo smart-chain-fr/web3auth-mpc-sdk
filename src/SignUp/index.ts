@@ -1,19 +1,19 @@
 import ModalStore from "../Modal/store";
 import { ModalStep } from "../enums/Modal";
-import createElementFromString from "../utils";
+import { createElementFromString } from "../utils/domUtils";
 import { SignInUpStyle } from "./style";
 
 export default class SignIn extends HTMLElement {
-  private render = () => {};
-  protected rootElement = this.attachShadow({ mode: "closed" });
-  protected store = ModalStore.getInstance();
+  private render: (() => void) | null = null;
+  private rootElement = this.attachShadow({ mode: "closed" });
+  private store = ModalStore.getInstance();
 
   constructor() {
     super();
   }
 
   public connectedCallback(): void {
-    this.render = this.getPreSetRender();
+    this.render ??= this.getPreSetRender();
     this.render();
   }
 
@@ -28,19 +28,19 @@ export default class SignIn extends HTMLElement {
       this.rootElement
     );
     const switchCurrentStepElement = createElementFromString(`<span class="switch">Sign in</span>`, subtitleElement);
+    switchCurrentStepElement.onclick = () => this.toggleSignInUp();
 
-    return () => {
-      switchCurrentStepElement.onclick = () => {
-        this.store.state = {
-          ...this.store.state,
-          currentStep: ModalStep.SignIn,
-        };
-        this.rootElement.innerHTML = "";
-      };
-    };
+    return () => {};
   };
 
-  public getStyle() {
+  private toggleSignInUp() {
+    this.store.state = {
+      ...this.store.state,
+      currentStep: ModalStep.SignIn,
+    };
+  }
+
+  private getStyle() {
     return SignInUpStyle;
   }
 }

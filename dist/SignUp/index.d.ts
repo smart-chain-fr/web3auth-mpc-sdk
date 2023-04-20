@@ -1,11 +1,11 @@
-import ModalStore from "../Modal/store";
 export default class SignIn extends HTMLElement {
     private render;
-    protected rootElement: ShadowRoot;
-    protected store: ModalStore;
+    private rootElement;
+    private store;
     constructor();
     connectedCallback(): void;
     disconnectedCallback(): void;
     private getPreSetRender;
-    getStyle(): string;
+    private toggleSignInUp;
+    private getStyle;
 }

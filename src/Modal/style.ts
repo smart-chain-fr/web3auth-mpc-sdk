@@ -1,4 +1,8 @@
 export const ModalStyle = `
+    * {
+        box-sizing: border-box;
+    }
+
     .popup {
         padding: 16px;
         position: fixed;

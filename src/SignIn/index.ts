@@ -1,19 +1,20 @@
+import { IInputProps } from "../EmailAddressInput";
 import ModalStore from "../Modal/store";
 import { ModalStep } from "../enums/Modal";
-import createElementFromString from "../utils";
+import { createElementFromString } from "../utils/domUtils";
 import { SignInUpStyle } from "./style";
 
 export default class SignIn extends HTMLElement {
-  private render = () => {};
-  protected rootElement: ShadowRoot = this.attachShadow({ mode: "closed" });
-  protected store = ModalStore.getInstance();
+  private render: (() => void) | null = null;
+  private rootElement: ShadowRoot = this.attachShadow({ mode: "closed" });
+  private store = ModalStore.getInstance();
 
   constructor() {
     super();
   }
 
   public connectedCallback(): void {
-    this.render = this.getPreSetRender();
+    this.render ??= this.getPreSetRender();
     this.render();
   }
 
@@ -28,19 +29,21 @@ export default class SignIn extends HTMLElement {
       `<span class="switch">Create account</span>`,
       subtitleElement
     );
+    createElementFromString(`<w3ac-email-address-input></w3ac-email-address-input>`, this.rootElement) as HTMLElement &
+      IInputProps;
+    switchCurrentStepElement.onclick = () => this.toggleSignInUp();
 
-    return () => {
-      switchCurrentStepElement.onclick = () => {
-        this.store.state = {
-          ...this.store.state,
-          currentStep: ModalStep.SignUp,
-        };
-        this.rootElement.innerHTML = "";
-      };
+    return () => {};
+  };
+
+  private toggleSignInUp = () => {
+    this.store.state = {
+      ...this.store.state,
+      currentStep: ModalStep.SignUp,
     };
   };
 
-  public getStyle() {
+  private getStyle() {
     return SignInUpStyle;
   }
 }

@@ -1,4 +1,4 @@
-export default function createElementFromString(
+export function createElementFromString(
   htmlString: string,
   parentElement: HTMLElement | ShadowRoot | null = null
 ): HTMLElement {
