@@ -1,11 +1,13 @@
+import { IButtonProps } from "../Button";
+import { IInputProps } from "../EmailAddressInput";
 import ModalStore from "../Modal/store";
 import { ModalStep } from "../enums/Modal";
 import { createElementFromString } from "../utils/domUtils";
 import { SignInUpStyle } from "./style";
 
-export default class SignIn extends HTMLElement {
+export default class SignUp extends HTMLElement {
   private render: (() => void) | null = null;
-  private rootElement = this.attachShadow({ mode: "closed" });
+  private rootElement: ShadowRoot = this.attachShadow({ mode: "closed" });
   private store = ModalStore.getInstance();
 
   constructor() {
@@ -29,16 +31,34 @@ export default class SignIn extends HTMLElement {
     );
     const switchCurrentStepElement = createElementFromString(`<span class="switch">Sign in</span>`, subtitleElement);
     switchCurrentStepElement.onclick = () => this.toggleSignInUp();
+    createElementFromString(`<w3ac-email-address-input></w3ac-email-address-input>`, this.rootElement) as HTMLElement &
+      IInputProps;
+    createElementFromString(
+      `<w3ac-button text="Create account" variant="primary"></w3ac-button>`,
+      this.rootElement
+    ) as HTMLElement & IButtonProps;
+    createElementFromString(
+      `<div class="separator">
+        <span class="line"></span>
+        <span class="separator-text">or</span>
+        <span class="line"></span>
+      </div>`,
+      this.rootElement
+    );
+    createElementFromString(
+      `<w3ac-button text="Connect wallet" variant="secondary"></w3ac-button>`,
+      this.rootElement
+    ) as HTMLElement & IButtonProps;
 
     return () => {};
   };
 
-  private toggleSignInUp() {
+  private toggleSignInUp = () => {
     this.store.state = {
       ...this.store.state,
       currentStep: ModalStep.SignIn,
     };
-  }
+  };
 
   private getStyle() {
     return SignInUpStyle;
