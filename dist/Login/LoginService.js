@@ -271,5 +271,14 @@ class LoginService {
             return yield (0, utils_1.setupWeb3)(chainConfig, loginReponse, signingParams);
         });
     }
+    sendTransaction(tx) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const signer = yield ((_a = this.provider) === null || _a === void 0 ? void 0 : _a.getSigner());
+            if (!signer)
+                throw new Error("Missing Signer");
+            return signer.sendTransaction(tx);
+        });
+    }
 }
 exports.LoginService = LoginService;

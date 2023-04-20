@@ -8,8 +8,7 @@ import { EthereumSigningProvider } from "@web3auth-mpc/ethereum-provider";
 import keccak256 from "keccak256";
 import CalcultationHelper from "./calculationHelper";
 import Config from "../Config";
-import Web3 from "web3";
-import type { provider } from "web3-core";
+import { ethers } from "ethers";
 
 const CHAIN_NAMESPACES = {
   EIP155: "eip155",
@@ -184,10 +183,10 @@ class WalletStore {
         return compressedTSSPubKey;
       };
       await ethereumSigningProvider.setupProvider({ sign, getPublic });
-      const web3 = new Web3(ethereumSigningProvider.provider as provider);
-
-      // const provider = new ethers.BrowserProvider(web3 as any);
-      return web3;
+      const provider = new ethers.providers.Web3Provider(
+        ethereumSigningProvider.provider as any
+      );
+      return provider;
     } catch (e) {
       console.error(e);
       return null;

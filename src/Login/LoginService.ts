@@ -2,7 +2,7 @@ import { getPubKeyECC, getPubKeyPoint, Point, ShareStore } from "@tkey/common-ty
 import { SafeEventEmitterProvider } from "@toruslabs/base-controllers";
 import BN from "bn.js";
 import { generatePrivate } from "eccrypto";
-import Web3 from "web3";
+import ethers from "ethers";
 
 import CalcultationHelper from "./calculationHelper";
 import { tKey } from "./tKey";
@@ -28,7 +28,7 @@ export class LoginService {
   tssShare2: BN;
   tssShare2Index: number;
   loginResponse: any;
-  provider: Web3 | null = null;
+  provider: ethers.providers.Web3Provider | null = null;
 
   constructor() {
     this.tssShare2 = new BN(0);
@@ -342,15 +342,24 @@ export class LoginService {
     return await setupWeb3(chainConfig, loginReponse, signingParams);
   }
 
-  async getAccounts() {
-    if (!this.provider) {
-      console.log("web3 not initialized yet");
-      return;
-    }
-    const address = (await this.provider.eth.getAccounts())[0];
-    console.log(address);
-    return address;
-  };
+  public async sendTransaction(tx: ethers.providers.TransactionRequest): Promise<ethers.providers.TransactionResponse> {
+
+		// External wallet
+		const signer = await this.provider?.getSigner();
+		if (!signer) throw new Error("Missing Signer");
+
+		return signer.sendTransaction(tx);
+	}
+
+  // async getAddress() {
+  //   if (!this.provider) {
+  //     console.log("web3 not initialized yet");
+  //     return;
+  //   }
+  //   const address = (await this.provider.eth.getAccounts())[0];
+  //   console.log(address);
+  //   return address;
+  // };
 
   // async sendTransaction() {
   //   if (!this.provider) {

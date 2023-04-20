@@ -44,7 +44,7 @@ const ethereum_provider_1 = require("@web3auth-mpc/ethereum-provider");
 const keccak256_1 = __importDefault(require("keccak256"));
 const calculationHelper_1 = __importDefault(require("./calculationHelper"));
 const Config_1 = __importDefault(require("../Config"));
-const web3_1 = __importDefault(require("web3"));
+const ethers_1 = require("ethers");
 const CHAIN_NAMESPACES = {
     EIP155: "eip155",
     SOLANA: "solana",
@@ -153,8 +153,8 @@ class WalletStore {
                     return compressedTSSPubKey;
                 });
                 yield ethereumSigningProvider.setupProvider({ sign, getPublic });
-                const web3 = new web3_1.default(ethereumSigningProvider.provider);
-                return web3;
+                const provider = new ethers_1.ethers.providers.Web3Provider(ethereumSigningProvider.provider);
+                return provider;
             }
             catch (e) {
                 console.error(e);

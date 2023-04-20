@@ -2,7 +2,7 @@
 import { Point, ShareStore } from "@tkey/common-types";
 import { SafeEventEmitterProvider } from "@toruslabs/base-controllers";
 import BN from "bn.js";
-import Web3 from "web3";
+import ethers from "ethers";
 import WalletStore from "./WalletStore";
 export type FactorKeyCloudMetadata = {
     deviceShare: ShareStore;
@@ -21,7 +21,7 @@ export declare class LoginService {
     tssShare2: BN;
     tssShare2Index: number;
     loginResponse: any;
-    provider: Web3 | null;
+    provider: ethers.providers.Web3Provider | null;
     constructor();
     static getInstance(): Promise<LoginService>;
     init(): Promise<void>;
@@ -43,4 +43,5 @@ export declare class LoginService {
     getSigningParams(compressedTSSPubKey: Buffer): ISigningParams;
     getUser(): any;
     getProvider(chainConfig: any, loginReponse: any, signingParams: any): Promise<SafeEventEmitterProvider | null>;
+    sendTransaction(tx: ethers.providers.TransactionRequest): Promise<ethers.providers.TransactionResponse>;
 }

@@ -1,5 +1,5 @@
 import { Socket } from "socket.io-client";
-import Web3 from "web3";
+import { ethers } from "ethers";
 declare class WalletStore {
     private static instance;
     static getInstance(): WalletStore;
@@ -9,7 +9,7 @@ declare class WalletStore {
         partyIndexes: number[];
     }>;
     getEcCrypto(): any;
-    initWallet(loginReponse?: any, signingParams?: any): Promise<Web3 | null>;
+    initWallet(loginReponse?: any, signingParams?: any): Promise<ethers.providers.Web3Provider | null>;
     setupSockets(tssWSEndpoints: string[]): Promise<Socket<import("@socket.io/component-emitter").DefaultEventsMap, import("@socket.io/component-emitter").DefaultEventsMap>[]>;
     createSockets(wsEndpoints: string[]): Promise<Socket[]>;
 }
