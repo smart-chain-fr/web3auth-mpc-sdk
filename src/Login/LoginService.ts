@@ -2,10 +2,12 @@ import { getPubKeyECC, getPubKeyPoint, Point, ShareStore } from "@tkey/common-ty
 import { SafeEventEmitterProvider } from "@toruslabs/base-controllers";
 import BN from "bn.js";
 import { generatePrivate } from "eccrypto";
+import Web3 from "web3";
 
 import CalcultationHelper from "./calculationHelper";
 import { tKey } from "./tKey";
 import { setupWeb3 } from "./utils";
+import WalletStore from "./WalletStore";
 
 export type FactorKeyCloudMetadata = {
   deviceShare: ShareStore;
@@ -26,6 +28,7 @@ export class LoginService {
   tssShare2: BN;
   tssShare2Index: number;
   loginResponse: any;
+  provider: Web3 | null = null;
 
   constructor() {
     this.tssShare2 = new BN(0);
@@ -62,9 +65,20 @@ export class LoginService {
       });
       console.log("loginResponse", loginResponse);
       this.loginResponse = loginResponse;
-      return loginResponse;
+      const factorKey = await this.getFactorKey();
+      console.log("FACTOR KEY", factorKey.toString(16))
+      const compressedTSSPubKey = await this.initTSSfromFactorKey(factorKey);
+      console.log("compressedTSSPubKey", compressedTSSPubKey.toString("hex"));
+      const signingParams = await this.getSigningParams(compressedTSSPubKey);
+      console.log("signingParams", signingParams);
+      const provider = await  WalletStore.getInstance();
+      const ethereumSigningProvider = await provider.initWallet(loginResponse, signingParams);
+      this.provider = ethereumSigningProvider;
+      console.log("PROVIDER", ethereumSigningProvider);
+      return provider;
     } catch (error) {
       console.log(error);
+      return;
     }
   }
 
@@ -303,9 +317,10 @@ export class LoginService {
     return compressedTSSPubKey;
   }
 
-  getSigningParams(): ISigningParams {
+  getSigningParams(compressedTSSPubKey: Buffer): ISigningParams {
     const to_ret: ISigningParams = {
       tssNonce: tKey.metadata.tssNonces![tKey.tssTag] ?? 0,
+      compressedTSSPubKey,
       tssShare2: this.tssShare2,
       tssShare2Index: this.tssShare2Index,
       signatures: this.loginResponse.signatures.filter(

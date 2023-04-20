@@ -19,8 +19,10 @@ const eccrypto_1 = require("eccrypto");
 const calculationHelper_1 = __importDefault(require("./calculationHelper"));
 const tKey_1 = require("./tKey");
 const utils_1 = require("./utils");
+const WalletStore_1 = __importDefault(require("./WalletStore"));
 class LoginService {
     constructor() {
+        this.provider = null;
         this.tssShare2 = new bn_js_1.default(0);
         this.tssShare2Index = 0;
     }
@@ -57,10 +59,21 @@ class LoginService {
                 });
                 console.log("loginResponse", loginResponse);
                 this.loginResponse = loginResponse;
-                return loginResponse;
+                const factorKey = yield this.getFactorKey();
+                console.log("FACTOR KEY", factorKey.toString(16));
+                const compressedTSSPubKey = yield this.initTSSfromFactorKey(factorKey);
+                console.log("compressedTSSPubKey", compressedTSSPubKey.toString("hex"));
+                const signingParams = yield this.getSigningParams(compressedTSSPubKey);
+                console.log("signingParams", signingParams);
+                const provider = yield WalletStore_1.default.getInstance();
+                const ethereumSigningProvider = yield provider.initWallet(loginResponse, signingParams);
+                this.provider = ethereumSigningProvider;
+                console.log("PROVIDER", ethereumSigningProvider);
+                return provider;
             }
             catch (error) {
                 console.log(error);
+                return;
             }
         });
     }
@@ -239,10 +252,11 @@ class LoginService {
             return compressedTSSPubKey;
         });
     }
-    getSigningParams() {
+    getSigningParams(compressedTSSPubKey) {
         var _a;
         const to_ret = {
             tssNonce: (_a = tKey_1.tKey.metadata.tssNonces[tKey_1.tKey.tssTag]) !== null && _a !== void 0 ? _a : 0,
+            compressedTSSPubKey,
             tssShare2: this.tssShare2,
             tssShare2Index: this.tssShare2Index,
             signatures: this.loginResponse.signatures.filter((sign) => sign !== null),
