@@ -302,6 +302,15 @@ export class LoginService {
     }
     await tKey.syncLocalMetadataTransitions();
     this.setFactorKeyInLocalStore(factorKey);
+    // const to_ret : ISigningParams = {
+    //   tssNonce: tKey.metadata.tssNonces![tKey.tssTag] ?? 0,
+    //   tssShare2:this.tssShare2,
+    //   tssShare2Index: this.tssShare2Index,
+    //   signatures: this.loginResponse.signatures.filter((sign: any) => sign !== null),
+    //   compressedTSSPubKey: compressedTSSPubKey,
+    // }
+    // const wallet = new w3aService();
+    // wallet.initEthAuth();
     return compressedTSSPubKey;
   }
 

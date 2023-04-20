@@ -33,6 +33,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*", "src/**/*.json"],
+  "include": ["src/**/*", "src/**/*.json", "src/Login/WalletStore.ts"],
   "exclude": ["node_modules"]
 }
