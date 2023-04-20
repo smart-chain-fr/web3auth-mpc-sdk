@@ -32,7 +32,7 @@ export default class EmailAddressInput extends HTMLElement {
     const inputContainerElement = createElementFromString(`<div class="input-container"></div`, containerElement);
     createElementFromString(MessageIconSvg, inputContainerElement);
     const inputElement = createElementFromString(
-      `<input type="text" class="input" />`,
+      `<input type="email" class="input" />`,
       inputContainerElement
     ) as HTMLInputElement;
     inputElement.placeholder = this.placeholder;

@@ -1,4 +1,5 @@
 import ModalStore from "../Modal/store";
+import { IVerifyCodeInputProps } from "../VerifyCodeInput";
 import { createElementFromString } from "../utils/domUtils";
 import { VerifyCodeStyle } from "./style";
 
@@ -6,7 +7,7 @@ export default class VerifyCode extends HTMLElement {
   private render: (() => void) | null = null;
   private rootElement: ShadowRoot = this.attachShadow({ mode: "closed" });
   private store = ModalStore.getInstance();
-  //   private pinCode: string = "";
+  private pinCode: string = "";
 
   constructor() {
     super();
@@ -27,13 +28,19 @@ export default class VerifyCode extends HTMLElement {
       `<p class="subtitle">We have sent a verification code at ${this.store.state.userEmail}.</p>`,
       this.rootElement
     );
+    const verifyCodeInputElement = createElementFromString(
+      `<w3ac-verify-code-input></w3ac-verify-code-input>`,
+      this.rootElement
+    ) as HTMLElement & IVerifyCodeInputProps;
+    verifyCodeInputElement.onInputChange = (value) => this.inputChangeHandler(value);
 
     return () => {};
   };
 
-  //   private inputChangeHandler(value: string) {
-  //     this.pinCode = value;
-  //   }
+  private inputChangeHandler(value: string) {
+    this.pinCode = value;
+    console.log("pinCode", this.pinCode);
+  }
 
   private getStyle() {
     return VerifyCodeStyle;

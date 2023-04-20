@@ -12,9 +12,12 @@ class VerifyCode extends HTMLElement {
         this.render = null;
         this.rootElement = this.attachShadow({ mode: "closed" });
         this.store = store_1.default.getInstance();
+        this.pinCode = "";
         this.getPreSetRender = () => {
             (0, domUtils_1.createElementFromString)(`<style>${this.getStyle()}</style>`, this.rootElement);
             (0, domUtils_1.createElementFromString)(`<p class="subtitle">We have sent a verification code at ${this.store.state.userEmail}.</p>`, this.rootElement);
+            const verifyCodeInputElement = (0, domUtils_1.createElementFromString)(`<w3ac-verify-code-input></w3ac-verify-code-input>`, this.rootElement);
+            verifyCodeInputElement.onInputChange = (value) => this.inputChangeHandler(value);
             return () => { };
         };
     }
@@ -25,6 +28,10 @@ class VerifyCode extends HTMLElement {
     }
     disconnectedCallback() {
         console.log("disconnectedCallback", this);
+    }
+    inputChangeHandler(value) {
+        this.pinCode = value;
+        console.log("pinCode", this.pinCode);
     }
     getStyle() {
         return style_1.VerifyCodeStyle;

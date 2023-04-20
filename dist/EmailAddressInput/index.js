@@ -25,7 +25,7 @@ class EmailAddressInput extends HTMLElement {
         (0, domUtils_1.createElementFromString)(`<p class="label">Email</p>`, containerElement);
         const inputContainerElement = (0, domUtils_1.createElementFromString)(`<div class="input-container"></div`, containerElement);
         (0, domUtils_1.createElementFromString)(message_1.MessageIconSvg, inputContainerElement);
-        const inputElement = (0, domUtils_1.createElementFromString)(`<input type="text" class="input" />`, inputContainerElement);
+        const inputElement = (0, domUtils_1.createElementFromString)(`<input type="email" class="input" />`, inputContainerElement);
         inputElement.placeholder = this.placeholder;
         inputElement.onchange = inputElement.oninput = () => this.inputChangeHandler(inputElement.value);
         return () => { };
