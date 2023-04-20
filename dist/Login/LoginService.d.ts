@@ -22,7 +22,10 @@ export declare class LoginService {
     constructor();
     static getInstance(): Promise<LoginService>;
     init(): Promise<void>;
-    triggerLogin(): Promise<any>;
+    triggerLogin(): Promise<{
+        loginResponse: any;
+        signingParams: any;
+    } | null>;
     isUserExisting(): Promise<boolean>;
     getFactorKey(): Promise<BN>;
     createFactorKey(): Promise<BN>;
@@ -37,7 +40,7 @@ export declare class LoginService {
     getDeviceShareFromTkey(): Promise<ShareStore | undefined>;
     addFactorKeyMetadata(factorKey: BN, tssShare: BN, tssIndex: number, factorKeyDescription: string): Promise<void>;
     initTSSfromFactorKey(factorKey: BN): Promise<Buffer>;
-    getSigningParams(): ISigningParams;
+    getSigningParams(compressedTSSPubKey: Buffer): ISigningParams;
     getUser(): any;
     getProvider(chainConfig: any, loginReponse: any, signingParams: any): Promise<SafeEventEmitterProvider | null>;
 }

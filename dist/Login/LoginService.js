@@ -47,7 +47,7 @@ class LoginService {
         return __awaiter(this, void 0, void 0, function* () {
             if (!tKey_1.tKey) {
                 console.error("tKey not initialized yet");
-                return;
+                return null;
             }
             try {
                 const loginResponse = yield tKey_1.tKey.serviceProvider.triggerLogin({
@@ -57,10 +57,14 @@ class LoginService {
                 });
                 console.log("loginResponse", loginResponse);
                 this.loginResponse = loginResponse;
-                return loginResponse;
+                const factorKey = yield this.getFactorKey();
+                const compressedTSSPubKey = yield this.initTSSfromFactorKey(factorKey);
+                const signingParams = this.getSigningParams(compressedTSSPubKey);
+                return { loginResponse, signingParams };
             }
             catch (error) {
                 console.log(error);
+                return null;
             }
         });
     }
@@ -86,6 +90,7 @@ class LoginService {
                 if (this.isLocalSharePresent()) {
                     console.log("Local share present");
                     factorKey = this.getFactorKeyFromLocalStore();
+                    console.log(factorKey);
                 }
                 else {
                     const backupShare = "coucou";
@@ -239,12 +244,13 @@ class LoginService {
             return compressedTSSPubKey;
         });
     }
-    getSigningParams() {
-        var _a;
+    getSigningParams(compressedTSSPubKey) {
+        var _a, _b;
         const to_ret = {
-            tssNonce: (_a = tKey_1.tKey.metadata.tssNonces[tKey_1.tKey.tssTag]) !== null && _a !== void 0 ? _a : 0,
+            tssNonce: (_b = (_a = tKey_1.tKey.metadata.tssNonces) === null || _a === void 0 ? void 0 : _a[tKey_1.tKey.tssTag]) !== null && _b !== void 0 ? _b : 0,
             tssShare2: this.tssShare2,
             tssShare2Index: this.tssShare2Index,
+            compressedTSSPubKey,
             signatures: this.loginResponse.signatures.filter((sign) => sign !== null),
         };
         return to_ret;

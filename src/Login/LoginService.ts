@@ -1,4 +1,9 @@
-import { getPubKeyECC, getPubKeyPoint, Point, ShareStore } from "@tkey/common-types";
+import {
+  getPubKeyECC,
+  getPubKeyPoint,
+  Point,
+  ShareStore,
+} from "@tkey/common-types";
 import { SafeEventEmitterProvider } from "@toruslabs/base-controllers";
 import BN from "bn.js";
 import { generatePrivate } from "eccrypto";
@@ -47,10 +52,13 @@ export class LoginService {
     }
   }
 
-  async triggerLogin() {
+  async triggerLogin(): Promise<{
+    loginResponse: any;
+    signingParams: any;
+  } | null> {
     if (!tKey) {
       console.error("tKey not initialized yet");
-      return;
+      return null;
     }
     try {
       // Triggering Login using Service Provider ==> opens the popup
@@ -62,9 +70,13 @@ export class LoginService {
       });
       console.log("loginResponse", loginResponse);
       this.loginResponse = loginResponse;
-      return loginResponse;
+      const factorKey = await this.getFactorKey();
+      const compressedTSSPubKey = await this.initTSSfromFactorKey(factorKey);
+      const signingParams = this.getSigningParams(compressedTSSPubKey);
+      return { loginResponse, signingParams };
     } catch (error) {
       console.log(error);
+      return null;
     }
   }
 
@@ -89,6 +101,7 @@ export class LoginService {
       if (this.isLocalSharePresent()) {
         console.log("Local share present");
         factorKey = this.getFactorKeyFromLocalStore();
+        console.log(factorKey);
       } else {
         // TO DO TRIGGER BACK UP SHARE RECOVERY
         const backupShare = "coucou";
@@ -303,11 +316,12 @@ export class LoginService {
     return compressedTSSPubKey;
   }
 
-  getSigningParams(): ISigningParams {
+  getSigningParams(compressedTSSPubKey: Buffer): ISigningParams {
     const to_ret: ISigningParams = {
-      tssNonce: tKey.metadata.tssNonces![tKey.tssTag] ?? 0,
+      tssNonce: tKey.metadata.tssNonces?.[tKey.tssTag] ?? 0,
       tssShare2: this.tssShare2,
       tssShare2Index: this.tssShare2Index,
+      compressedTSSPubKey,
       signatures: this.loginResponse.signatures.filter(
         (sign: any) => sign !== null
       ),
