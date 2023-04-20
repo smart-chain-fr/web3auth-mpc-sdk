@@ -41,10 +41,24 @@ class SignIn extends HTMLElement {
         console.log("disconnectedCallback", this);
     }
     onConnectButtonClick() {
-        console.log(this.userEmailAddress);
+        console.log({ userEmail: this.userEmailAddress });
+        this.storeUserEmail();
+        this.goToVerifyCode();
+    }
+    storeUserEmail() {
+        this.store.state = {
+            ...this.store.state,
+            userEmail: this.userEmailAddress,
+        };
     }
     inputChangeHandler(value) {
         this.userEmailAddress = value;
+    }
+    goToVerifyCode() {
+        this.store.state = {
+            ...this.store.state,
+            currentStep: Modal_1.ModalStep.VerifyingCode,
+        };
     }
     toggleSignInUp() {
         this.store.state = {

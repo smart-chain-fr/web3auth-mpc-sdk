@@ -10,6 +10,7 @@ class ModalStore {
         this.event = new EventEmitter_1.default();
         this._state = {
             currentStep: Modal_1.ModalStep.SignIn,
+            userEmail: "",
         };
     }
     static getInstance() {

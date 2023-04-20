@@ -3,6 +3,7 @@ import { ModalStep } from "../enums/Modal";
 
 interface IModalState {
   currentStep: ModalStep;
+  userEmail: string;
 }
 
 export default class ModalStore {
@@ -17,6 +18,7 @@ export default class ModalStore {
 
   private _state: IModalState = {
     currentStep: ModalStep.SignIn,
+    userEmail: "",
   };
 
   public set state(newState: IModalState) {

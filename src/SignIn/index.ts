@@ -59,12 +59,28 @@ export default class SignIn extends HTMLElement {
   };
 
   private onConnectButtonClick() {
-    console.log(this.userEmailAddress);
+    console.log({ userEmail: this.userEmailAddress });
+    this.storeUserEmail();
     // TODO: Call API endpoint to send email
+    this.goToVerifyCode();
+  }
+
+  private storeUserEmail() {
+    this.store.state = {
+      ...this.store.state,
+      userEmail: this.userEmailAddress,
+    };
   }
 
   private inputChangeHandler(value: string) {
     this.userEmailAddress = value;
+  }
+
+  private goToVerifyCode() {
+    this.store.state = {
+      ...this.store.state,
+      currentStep: ModalStep.VerifyingCode,
+    };
   }
 
   private toggleSignInUp() {

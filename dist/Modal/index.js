@@ -44,6 +44,7 @@ class Modal extends HTMLElement {
         const childs = {
             [Modal_1.ModalStep.SignIn]: (0, domUtils_1.createElementFromString)("<w3ac-sign-in></w3ac-sign-in>"),
             [Modal_1.ModalStep.SignUp]: (0, domUtils_1.createElementFromString)("<w3ac-sign-up></w3ac-sign-up>"),
+            [Modal_1.ModalStep.VerifyingCode]: (0, domUtils_1.createElementFromString)("<w3ac-verify-code></w3ac-verify-code>"),
         };
         return () => {
             var _a;

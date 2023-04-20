@@ -8,7 +8,9 @@ export default class SignIn extends HTMLElement {
     disconnectedCallback(): void;
     private getPreSetRender;
     private onConnectButtonClick;
+    private storeUserEmail;
     private inputChangeHandler;
+    private goToVerifyCode;
     private toggleSignInUp;
     private getStyle;
 }

@@ -1,0 +1,1 @@
+export declare const VerifyCodeStyle = "\n    .subtitle {\n        margin: 0;\n        margin-top: 10px;\n        font-family: 'Inter';\n        font-weight: 400;\n        font-size: 14px;\n        line-height: 24px;\n        color: #6B7280;\n    }\n";
