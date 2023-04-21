@@ -3,16 +3,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const store_1 = __importDefault(require("../Components/Modal/store"));
-const Modal_1 = require("../enums/Modal");
-const domUtils_1 = require("../utils/domUtils");
+const ModalStore_1 = __importDefault(require("../../Stores/ModalStore"));
+const Modal_1 = require("../../enums/Modal");
+const domUtils_1 = require("../../utils/domUtils");
 const style_1 = require("./style");
 class SignIn extends HTMLElement {
     constructor() {
         super();
         this.render = null;
         this.rootElement = this.attachShadow({ mode: "closed" });
-        this.store = store_1.default.getInstance();
+        this.store = ModalStore_1.default.getInstance();
         this.userEmailAddress = "";
         this.getPreSetRender = () => {
             (0, domUtils_1.createElementFromString)(`<style>${this.getStyle()}</style>`, this.rootElement);

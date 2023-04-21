@@ -1,12 +1,12 @@
-import EmailAddressInput from "./EmailAddressInput";
+import EmailAddressInput from "./Components/EmailAddressInput";
 import "./jsx";
-import Modal from "./Modal";
-import SignIn from "./SignIn";
-import SignUp from "./SignUp";
-import Button from "./Button";
-import VerifyCode from "./VerifyCode";
-import VerifyCodeInput from "./VerifyCodeInput";
-import EnterBackupPassword from "./EnterBackupPassword";
+import Modal from "./Components/Modal";
+import SignIn from "./Components/SignIn";
+import SignUp from "./Components/SignUp";
+import Button from "./Components/Button";
+import VerifyCode from "./Components/VerifyCode";
+import VerifyCodeInput from "./Components/VerifyCodeInput";
+import EnterBackupPassword from "./Components/EnterBackupPassword";
 
 customElements.define("w3ac-modal", Modal);
 customElements.define("w3ac-sign-in", SignIn);

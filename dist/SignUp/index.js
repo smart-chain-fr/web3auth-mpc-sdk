@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const store_1 = __importDefault(require("../Modal/store"));
+const store_1 = __importDefault(require("../Components/Modal/store"));
 const Modal_1 = require("../enums/Modal");
 const domUtils_1 = require("../utils/domUtils");
 const style_1 = require("./style");

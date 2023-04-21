@@ -1,5 +1,5 @@
 import type React from "react";
-import { IModalProps } from "./Modal";
+import { IModalProps } from "./Components/Modal";
 declare global {
     namespace JSX {
         interface IntrinsicElements {
