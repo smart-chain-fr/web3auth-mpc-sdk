@@ -3,7 +3,6 @@ import { Point, ShareStore } from "@tkey/common-types";
 import { SafeEventEmitterProvider } from "@toruslabs/base-controllers";
 import BN from "bn.js";
 import ethers from "ethers";
-import WalletStore from "./WalletStore";
 export type FactorKeyCloudMetadata = {
     deviceShare: ShareStore;
     tssShare: BN;
@@ -16,16 +15,16 @@ export type ISigningParams = {
     compressedTSSPubKey?: Buffer;
     signatures: any;
 };
-export declare class LoginService {
+export declare class Web3AuthMPCWallet {
     private static instance;
     tssShare2: BN;
     tssShare2Index: number;
     loginResponse: any;
     provider: ethers.providers.Web3Provider | null;
     constructor();
-    static getInstance(): Promise<LoginService>;
+    static getInstance(): Promise<Web3AuthMPCWallet>;
     init(): Promise<void>;
-    triggerLogin(): Promise<WalletStore | undefined>;
+    triggerLogin(): Promise<ethers.providers.Web3Provider | null>;
     isUserExisting(): Promise<boolean>;
     getFactorKey(): Promise<BN>;
     createFactorKey(): Promise<BN>;
@@ -44,4 +43,6 @@ export declare class LoginService {
     getUser(): any;
     getProvider(chainConfig: any, loginReponse: any, signingParams: any): Promise<SafeEventEmitterProvider | null>;
     sendTransaction(tx: ethers.providers.TransactionRequest): Promise<ethers.providers.TransactionResponse>;
+    getAddress(): Promise<string | undefined>;
+    logOut(): Promise<void>;
 }

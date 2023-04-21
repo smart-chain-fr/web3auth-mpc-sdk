@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoginService = void 0;
+exports.Web3AuthMPCWallet = void 0;
 const common_types_1 = require("@tkey/common-types");
 const bn_js_1 = __importDefault(require("bn.js"));
 const eccrypto_1 = require("eccrypto");
@@ -20,7 +20,7 @@ const calculationHelper_1 = __importDefault(require("./calculationHelper"));
 const tKey_1 = require("./tKey");
 const utils_1 = require("./utils");
 const WalletStore_1 = __importDefault(require("./WalletStore"));
-class LoginService {
+class Web3AuthMPCWallet {
     constructor() {
         this.provider = null;
         this.tssShare2 = new bn_js_1.default(0);
@@ -30,7 +30,7 @@ class LoginService {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.instance)
                 return this.instance;
-            this.instance = new LoginService();
+            this.instance = new Web3AuthMPCWallet();
             yield this.instance.init();
             return this.instance;
         });
@@ -49,7 +49,7 @@ class LoginService {
         return __awaiter(this, void 0, void 0, function* () {
             if (!tKey_1.tKey) {
                 console.error("tKey not initialized yet");
-                return;
+                return null;
             }
             try {
                 const loginResponse = yield tKey_1.tKey.serviceProvider.triggerLogin({
@@ -69,11 +69,11 @@ class LoginService {
                 const ethereumSigningProvider = yield provider.initWallet(loginResponse, signingParams);
                 this.provider = ethereumSigningProvider;
                 console.log("PROVIDER", ethereumSigningProvider);
-                return provider;
+                return this.provider;
             }
             catch (error) {
                 console.log(error);
-                return;
+                return null;
             }
         });
     }
@@ -280,5 +280,26 @@ class LoginService {
             return signer.sendTransaction(tx);
         });
     }
+    getAddress() {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.provider) {
+                console.log("web3 not initialized yet");
+                return;
+            }
+            const address = (_b = yield ((_a = this.provider) === null || _a === void 0 ? void 0 : _a.getSigner().getAddress())) !== null && _b !== void 0 ? _b : null;
+            console.log(address);
+            return address;
+        });
+    }
+    ;
+    logOut() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.loginResponse = null;
+            this.provider = null;
+            this.tssShare2 = new bn_js_1.default(0);
+            this.tssShare2Index = 0;
+        });
+    }
 }
-exports.LoginService = LoginService;
+exports.Web3AuthMPCWallet = Web3AuthMPCWallet;

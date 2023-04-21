@@ -23,8 +23,8 @@ export type ISigningParams = {
   signatures: any; // TO DO TYPE THIS
 };
 
-export class LoginService {
-  private static instance: LoginService;
+export class Web3AuthMPCWallet {
+  private static instance: Web3AuthMPCWallet;
   tssShare2: BN;
   tssShare2Index: number;
   loginResponse: any;
@@ -35,9 +35,9 @@ export class LoginService {
     this.tssShare2Index = 0;
   }
 
-  static async getInstance(): Promise<LoginService> {
+  static async getInstance(): Promise<Web3AuthMPCWallet> {
     if (this.instance) return this.instance;
-    this.instance = new LoginService();
+    this.instance = new Web3AuthMPCWallet();
     await this.instance.init();
     return this.instance;
   }
@@ -50,10 +50,10 @@ export class LoginService {
     }
   }
 
-  async triggerLogin() {
+  async triggerLogin() : Promise<ethers.providers.Web3Provider | null> {
     if (!tKey) {
       console.error("tKey not initialized yet");
-      return;
+      return null;
     }
     try {
       // Triggering Login using Service Provider ==> opens the popup
@@ -75,10 +75,10 @@ export class LoginService {
       const ethereumSigningProvider = await provider.initWallet(loginResponse, signingParams);
       this.provider = ethereumSigningProvider;
       console.log("PROVIDER", ethereumSigningProvider);
-      return provider;
+      return this.provider;
     } catch (error) {
       console.log(error);
-      return;
+      return null;
     }
   }
 
@@ -351,33 +351,21 @@ export class LoginService {
 		return signer.sendTransaction(tx);
 	}
 
-  // async getAddress() {
-  //   if (!this.provider) {
-  //     console.log("web3 not initialized yet");
-  //     return;
-  //   }
-  //   const address = (await this.provider.eth.getAccounts())[0];
-  //   console.log(address);
-  //   return address;
-  // };
+  async getAddress() {
+    if (!this.provider) {
+      console.log("web3 not initialized yet");
+      return;
+    }
+    const address : string | null = await this.provider?.getSigner().getAddress() ?? null;
+    console.log(address);
+    return address;
+  };
 
-  // async sendTransaction() {
-  //   if (!this.provider) {
-  //     console.log("web3 not initialized yet");
-  //     return;
-  //   }
-  //   const fromAddress = (await this.provider.eth.getAccounts())[0];
+  async logOut() {
+    this.loginResponse = null;
+    this.provider = null;
+    this.tssShare2 = new BN(0);
+    this.tssShare2Index = 0;
+  }
 
-  //   const destination = "0x2E464670992574A613f10F7682D5057fB507Cc21";
-  //   const amount = this.provider.utils.toWei("0.0001"); // Convert 1 ether to wei
-
-  //   // Submit transaction to the blockchain and wait for it to be mined
-  //   console.log("Sending transaction...");
-  //   const receipt = await this.provider.eth.sendTransaction({
-  //     from: fromAddress,
-  //     to: destination,
-  //     value: amount,
-  //   });
-  //   console.log(receipt);
-  // }
 }
